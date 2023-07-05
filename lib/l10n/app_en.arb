@@ -1,3 +1,11 @@
 {
-  "title": "Clothes Randomizer"
+  "cancel": "Cancel",
+  "invalidUserID": "Invalid user ID.",
+  "invalidPassword": "Invalid password.",
+  "loading": "Loading",
+  "password": "Password",
+  "signIn": "Sign in",
+  "signOut": "Sign out",
+  "title": "Clothes Randomizer",
+  "userID": "User ID"
 }

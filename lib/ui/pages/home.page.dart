@@ -1,5 +1,7 @@
+import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({
@@ -30,6 +32,30 @@ class HomePage extends StatelessWidget {
         title: Text(
           l10n.title,
         ),
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (
+              context,
+            ) {
+              return [
+                PopupMenuItem(
+                  // TODO
+                  value: 0,
+                  child: Text(
+                    l10n.signOut,
+                  ),
+                ),
+              ];
+            },
+            onSelected: (
+              value,
+            ) =>
+                onSignOut(
+              context: context,
+              value: value,
+            ),
+          ),
+        ],
       ),
       body: SizedBox(
         height: mediaSize.height,
@@ -49,5 +75,13 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  onSignOut({
+    required BuildContext context,
+    required int value,
+  }) {
+    final userBloc = Provider.of<UserBloc>(context, listen: false);
+    userBloc.validateAndSetToken(newToken: null);
   }
 }

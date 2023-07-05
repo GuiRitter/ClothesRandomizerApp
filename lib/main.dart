@@ -1,8 +1,9 @@
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
-import 'package:clothes_randomizer_app/ui/pages/tabs.page.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
+import 'package:clothes_randomizer_app/ui/pages/tabs.page.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 // flutter build web --base-href "/clothes_randomizer/"
@@ -23,6 +24,34 @@ void showSnackBar({
         ),
       ),
     );
+
+String treatDioResponse({
+  required dynamic response,
+}) {
+  if (response!.data is Map) {
+    if ((response!.data as Map).containsKey(
+      Settings.error,
+    )) {
+      return response!.data[Settings.error];
+    }
+  }
+  return response!.data.toString();
+}
+
+String treatException({
+  required dynamic exception,
+}) {
+  if (exception is DioException) {
+    if (exception.response != null) {
+      return treatDioResponse(
+        response: exception.response,
+      );
+    } else if (exception.message != null) {
+      return exception.message!;
+    }
+  }
+  return exception.toString();
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({

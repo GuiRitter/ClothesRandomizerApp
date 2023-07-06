@@ -1,4 +1,4 @@
-import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
+import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +15,11 @@ class LoadingPage extends StatelessWidget {
     var l10n = AppLocalizations.of(
       context,
     )!;
+
+    final padding = Theme.of(
+          context,
+        ).textTheme.titleLarge?.fontSize ??
+        0.0;
 
     return Scaffold(
       appBar: AppBar(
@@ -37,9 +42,11 @@ class LoadingPage extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: Wrap(
+          direction: Axis.vertical,
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: padding,
           children: [
             const CircularProgressIndicator(),
             ElevatedButton(
@@ -59,11 +66,11 @@ class LoadingPage extends StatelessWidget {
   onCancelPressed({
     required BuildContext context,
   }) {
-    final userBloc = Provider.of<UserBloc>(
+    final loadingBloc = Provider.of<LoadingBloc>(
       context,
       listen: false,
     );
 
-    userBloc.cancelRequest();
+    loadingBloc.cancelRequest();
   }
 }

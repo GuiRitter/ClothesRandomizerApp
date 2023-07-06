@@ -1,3 +1,4 @@
+import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
 import 'package:clothes_randomizer_app/ui/pages/tabs.page.dart';
@@ -61,36 +62,44 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(
     BuildContext context,
-  ) =>
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider<UserBloc>.value(
-            value: UserBloc(),
-          ),
-        ],
-        child: MaterialApp(
-          title: getTitle(
-            context,
-          ),
-          theme: Theme.of(
-            context,
-          ).copyWith(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.black,
-            ),
-          ),
-          darkTheme: ThemeData.dark().copyWith(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.white,
-            ),
-          ),
-          // flutter gen-l10n
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          scaffoldMessengerKey: Settings.snackState,
-          home: const TabsPage(),
+  ) {
+    final loadingBloc = LoadingBloc();
+
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<LoadingBloc>.value(
+          value: loadingBloc,
         ),
-      );
+        ChangeNotifierProvider<UserBloc>.value(
+          value: UserBloc(
+            loadingBloc: loadingBloc,
+          ),
+        ),
+      ],
+      child: MaterialApp(
+        title: getTitle(
+          context,
+        ),
+        theme: Theme.of(
+          context,
+        ).copyWith(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.black,
+          ),
+        ),
+        darkTheme: ThemeData.dark().copyWith(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.white,
+          ),
+        ),
+        // flutter gen-l10n
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        scaffoldMessengerKey: Settings.snackState,
+        home: const TabsPage(),
+      ),
+    );
+  }
 
   /// Only needed here
   getTitle(

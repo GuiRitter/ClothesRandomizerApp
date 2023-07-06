@@ -1,3 +1,4 @@
+import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/ui/pages/home.page.dart';
 import 'package:clothes_randomizer_app/ui/pages/loading.page.dart';
@@ -14,11 +15,14 @@ class TabsPage extends StatelessWidget {
   Widget build(
     BuildContext context,
   ) {
+    final loadingBloc = Provider.of<LoadingBloc>(
+      context,
+    );
     final userBloc = Provider.of<UserBloc>(
       context,
     );
 
-    if (userBloc.isLoading) {
+    if (loadingBloc.isLoading) {
       return const LoadingPage();
     } else if (userBloc.token != null) {
       return const HomePage();

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
 import 'package:clothes_randomizer_app/constants/api_url.dart';
 import 'package:clothes_randomizer_app/constants/result_status.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
@@ -12,17 +13,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UserBloc extends ChangeNotifier {
   String? _token;
-  bool isLoading = false;
-  CancelToken? _cancelToken;
+  final LoadingBloc loadingBloc;
 
   final _api = Settings.api;
 
-  String? get token => _token;
+  UserBloc({
+    required this.loadingBloc,
+  });
 
-  cancelRequest() {
-    _cancelToken?.cancel();
-    _cancelToken = null;
-  }
+  String? get token => _token;
 
   Future<void> signIn(
     SignInModel signInModel,
@@ -34,19 +33,21 @@ class UserBloc extends ChangeNotifier {
         "",
       );
 
-      isLoading = true;
-      _cancelToken = CancelToken();
-      notifyListeners();
+      final cancelToken = CancelToken();
+      loadingBloc.show(
+        cancelToken: cancelToken,
+        isNotify: true,
+      );
 
       final response = await _api.post(
         ApiUrl.signIn.path,
         data: signInModel.toJson(),
-        cancelToken: _cancelToken,
+        cancelToken: cancelToken,
       );
 
-      isLoading = false;
-      _cancelToken = null;
-      notifyListeners();
+      loadingBloc.hide(
+        isNotify: true,
+      );
 
       if ((response.statusCode != HttpStatus.ok) ||
           (response.data is! Map) ||
@@ -69,8 +70,9 @@ class UserBloc extends ChangeNotifier {
 
       notifyListeners();
     } catch (_) {
-      isLoading = false;
-      notifyListeners();
+      loadingBloc.hide(
+        isNotify: true,
+      );
       rethrow;
     }
   }
@@ -97,16 +99,19 @@ class UserBloc extends ChangeNotifier {
 
     _api.options.headers[Settings.token] = newToken;
 
-    isLoading = true;
-    _cancelToken = CancelToken();
-    notifyListeners();
-
-    var response = await _validateToken(
-      cancelToken: _cancelToken!,
+    final cancelToken = CancelToken();
+    loadingBloc.show(
+      cancelToken: cancelToken,
+      isNotify: true,
     );
 
-    isLoading = false;
-    _cancelToken = null;
+    var response = await _validateToken(
+      cancelToken: cancelToken,
+    );
+
+    loadingBloc.hide(
+      isNotify: false,
+    );
 
     if (response.status == ResultStatus.unauthorized) {
       await _clearToken();
@@ -114,6 +119,7 @@ class UserBloc extends ChangeNotifier {
       _token = newToken;
     }
 
+    loadingBloc.notifyListeners();
     notifyListeners();
 
     return response;

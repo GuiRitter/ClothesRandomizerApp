@@ -1,14 +1,21 @@
+import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/popup_menu.enum.dart';
+import 'package:clothes_randomizer_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({
     super.key,
   });
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(
     BuildContext context,
@@ -27,6 +34,10 @@ class HomePage extends StatelessWidget {
     final mediaSize = MediaQuery.of(
       context,
     ).size;
+
+    final dataBloc = Provider.of<DataBloc>(
+      context,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -67,14 +78,36 @@ class HomePage extends StatelessWidget {
                 ).textTheme.labelLarge?.fontSize ??
                 0,
           ),
-          child: const Center(
+          child: Center(
             child: Text(
-              "Hello, World!",
+              "local: ${dataBloc.localList.length}\npiece of clothing type: ${dataBloc.pieceOfClothingTypeList.length}\npiece of clothing: ${dataBloc.pieceOfClothingList.length}\ntype use: ${dataBloc.typeUseList.length}",
             ),
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    final dataBloc = Provider.of<DataBloc>(
+      context,
+      listen: false,
+    );
+
+    dataBloc.getBaseData().then(
+      (
+        result,
+      ) {
+        if (result.message?.isNotEmpty ?? false) {
+          showSnackBar(
+            message: result.message,
+          );
+        }
+      },
+    );
+
+    super.initState();
   }
 
   onSignOut({

@@ -1,4 +1,4 @@
-import 'package:clothes_randomizer_app/constants/result_status.dart';
+import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 
 class Result<DataType> {
   final DataType? data;

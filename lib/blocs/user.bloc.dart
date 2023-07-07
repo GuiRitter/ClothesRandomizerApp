@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
-import 'package:clothes_randomizer_app/constants/api_url.dart';
-import 'package:clothes_randomizer_app/constants/result_status.dart';
+import 'package:clothes_randomizer_app/constants/api_url.enum.dart';
+import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
 import 'package:clothes_randomizer_app/main.dart';
 import 'package:clothes_randomizer_app/models/result.dart';
@@ -90,7 +90,7 @@ class UserBloc extends ChangeNotifier {
     }
 
     if (newToken == null) {
-      await _clearToken();
+      await clearToken();
       notifyListeners();
       return Result(
         status: ResultStatus.success,
@@ -113,8 +113,9 @@ class UserBloc extends ChangeNotifier {
       isNotify: false,
     );
 
+    // TODO interceptor?
     if (response.status == ResultStatus.unauthorized) {
-      await _clearToken();
+      await clearToken();
     } else {
       _token = newToken;
     }
@@ -125,7 +126,7 @@ class UserBloc extends ChangeNotifier {
     return response;
   }
 
-  _clearToken() async {
+  clearToken() async {
     _token = null;
 
     _api.options.headers.remove(

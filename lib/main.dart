@@ -1,3 +1,4 @@
+import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
@@ -64,6 +65,9 @@ class MyApp extends StatelessWidget {
     BuildContext context,
   ) {
     final loadingBloc = LoadingBloc();
+    final userBloc = UserBloc(
+      loadingBloc: loadingBloc,
+    );
 
     return MultiProvider(
       providers: [
@@ -71,8 +75,12 @@ class MyApp extends StatelessWidget {
           value: loadingBloc,
         ),
         ChangeNotifierProvider<UserBloc>.value(
-          value: UserBloc(
+          value: userBloc,
+        ),
+        ChangeNotifierProvider<DataBloc>.value(
+          value: DataBloc(
             loadingBloc: loadingBloc,
+            userBloc: userBloc,
           ),
         ),
       ],

@@ -1,4 +1,5 @@
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
+import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
 import 'package:clothes_randomizer_app/main.dart';
 import 'package:clothes_randomizer_app/models/sign_in.model.dart';
@@ -42,7 +43,9 @@ class SignInPage extends StatelessWidget {
             (
               result,
             ) {
-              if (result.message != null) {
+              if (result.hasMessageNotIn(
+                status: ResultStatus.success,
+              )) {
                 showSnackBar(
                   message: result.message,
                 );
@@ -131,18 +134,18 @@ class SignInPage extends StatelessWidget {
 
                         TextInput.finishAutofillContext();
 
-                        try {
-                          await bloc.signIn(
-                            SignInModel(
-                              userId: _userId ?? "",
-                              password: _password ?? "",
-                            ),
-                          );
-                        } catch (exception) {
+                        final result = await bloc.signIn(
+                          SignInModel(
+                            userId: _userId ?? "",
+                            password: _password ?? "",
+                          ),
+                        );
+
+                        if (result.hasMessageNotIn(
+                          status: ResultStatus.success,
+                        )) {
                           showSnackBar(
-                            message: treatException(
-                              exception: exception,
-                            ),
+                            message: result.message,
                           );
                         }
                       },

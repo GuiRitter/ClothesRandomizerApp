@@ -104,6 +104,7 @@ class MyApp extends StatelessWidget {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         scaffoldMessengerKey: Settings.snackState,
+        navigatorKey: Settings.navigatorState,
         home: const TabsPage(),
       ),
     );

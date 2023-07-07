@@ -1,12 +1,9 @@
-import 'dart:io';
-
 import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/api_url.enum.dart';
 import 'package:clothes_randomizer_app/constants/models.enum.dart';
 import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
-import 'package:clothes_randomizer_app/main.dart';
 import 'package:clothes_randomizer_app/models/local.model.dart';
 import 'package:clothes_randomizer_app/models/piece_of_clothing.model.dart';
 import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart';
@@ -60,7 +57,8 @@ class DataBloc extends ChangeNotifier {
       isNotify: true,
     );
 
-    var response = await _getBaseData(
+    var response = await _api.getResult(
+      ApiUrl.chunk.path,
       cancelToken: cancelToken,
     );
 
@@ -68,43 +66,19 @@ class DataBloc extends ChangeNotifier {
       isNotify: false,
     );
 
-    // TODO interceptor?
-    if (response.status == ResultStatus.unauthorized) {
-      await userBloc.clearToken();
-    } else if (response.status == ResultStatus.success) {
+    if (response.status == ResultStatus.success) {
       _populateBaseData(response.data);
     }
 
     loadingBloc.notifyListeners();
     notifyListeners();
 
-    return response;
-  }
-
-  Future<Result> _getBaseData({
-    required CancelToken cancelToken,
-  }) async {
-    try {
-      final response = await _api.get(
-        ApiUrl.chunk.path,
-        cancelToken: cancelToken,
-      );
-
-      return Result(
-        status: ResultStatus.success,
-        data: response.data,
-      );
-    } catch (exception) {
-      return Result(
-        status: ((exception is DioException) &&
-                (exception.response?.statusCode == HttpStatus.unauthorized))
-            ? ResultStatus.unauthorized
-            : ResultStatus.error,
-        message: treatException(
-          exception: exception,
-        ),
-      );
-    }
+    return response.withData(
+      handler: (
+        data,
+      ) =>
+          null,
+    );
   }
 
   _linkPieceOfClothings() {

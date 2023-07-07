@@ -14,5 +14,8 @@ class Settings {
   static final GlobalKey<ScaffoldMessengerState> snackState =
       GlobalKey<ScaffoldMessengerState>();
 
+  static final GlobalKey<NavigatorState> navigatorState =
+      GlobalKey<NavigatorState>();
+
   static String token = "token";
 }

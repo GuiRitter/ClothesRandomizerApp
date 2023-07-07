@@ -1,6 +1,7 @@
 import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/popup_menu.enum.dart';
+import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -99,7 +100,9 @@ class _HomePageState extends State<HomePage> {
       (
         result,
       ) {
-        if (result.message?.isNotEmpty ?? false) {
+        if (result.hasMessageNotIn(
+          status: ResultStatus.success,
+        )) {
           showSnackBar(
             message: result.message,
           );

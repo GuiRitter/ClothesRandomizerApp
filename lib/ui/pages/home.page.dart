@@ -1,4 +1,5 @@
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
+import 'package:clothes_randomizer_app/constants/popup_menu.enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -39,8 +40,7 @@ class HomePage extends StatelessWidget {
             ) {
               return [
                 PopupMenuItem(
-                  // TODO
-                  value: 0,
+                  value: PopupMenuEnum.signOut,
                   child: Text(
                     l10n.signOut,
                   ),
@@ -79,7 +79,7 @@ class HomePage extends StatelessWidget {
 
   onSignOut({
     required BuildContext context,
-    required int value,
+    required PopupMenuEnum value,
   }) {
     final userBloc = Provider.of<UserBloc>(context, listen: false);
     userBloc.validateAndSetToken(newToken: null);

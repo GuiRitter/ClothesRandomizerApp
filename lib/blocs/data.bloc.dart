@@ -25,6 +25,11 @@ class DataBloc extends ChangeNotifier {
 
   final List<TypeUseModel> _typeUseList = <TypeUseModel>[];
 
+  LocalModel? localSelected;
+  PieceOfClothingModel? pieceOfClothingSelected;
+  PieceOfClothingTypeModel? pieceOfClothingTypeSelected;
+  TypeUseModel? typeUseSelected;
+
   List<LocalModel> get localList => List.unmodifiable(
         _localList,
       );
@@ -118,6 +123,7 @@ class DataBloc extends ChangeNotifier {
         data[ModelsEnum.local.name],
       ),
     );
+    _localList.sort();
 
     _pieceOfClothingTypeList.clear();
     _pieceOfClothingTypeList.addAll(
@@ -143,5 +149,7 @@ class DataBloc extends ChangeNotifier {
     );
 
     _linkTypeUses();
+
+    localSelected ??= localList.first;
   }
 }

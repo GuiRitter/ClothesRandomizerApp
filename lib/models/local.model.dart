@@ -1,6 +1,7 @@
 import 'package:clothes_randomizer_app/models/template.model.dart';
+import 'package:clothes_randomizer_app/utils/string.comparator.dart';
 
-class LocalModel extends TemplateModel {
+class LocalModel extends TemplateModel implements Comparable<LocalModel> {
   final String id;
   final String name;
 
@@ -16,6 +17,15 @@ class LocalModel extends TemplateModel {
       LocalModel(
         id: json["id"],
         name: json["name"],
+      );
+
+  @override
+  int compareTo(
+    LocalModel other,
+  ) =>
+      StringComparator.compare(
+        alpha: name,
+        bravo: other.name,
       );
 
   static List<LocalModel> fromList(

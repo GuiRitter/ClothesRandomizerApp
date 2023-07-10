@@ -6,17 +6,13 @@ import 'package:clothes_randomizer_app/models/result.dart';
 import 'package:clothes_randomizer_app/models/sign_in.model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserBloc extends ChangeNotifier {
   String? _token;
-  final LoadingBloc loadingBloc;
 
   final _api = Settings.api;
-
-  UserBloc({
-    required this.loadingBloc,
-  });
 
   String? get token => _token;
 
@@ -41,6 +37,11 @@ class UserBloc extends ChangeNotifier {
     prefs.setString(
       Settings.token,
       "",
+    );
+
+    final loadingBloc = Provider.of<LoadingBloc>(
+      Settings.navigatorState.currentContext!,
+      listen: false,
     );
 
     final cancelToken = CancelToken();
@@ -90,6 +91,11 @@ class UserBloc extends ChangeNotifier {
       notifyListeners();
       return Result.success();
     }
+
+    final loadingBloc = Provider.of<LoadingBloc>(
+      Settings.navigatorState.currentContext!,
+      listen: false,
+    );
 
     _api.options.headers[Settings.token] = newToken;
 

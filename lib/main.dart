@@ -64,24 +64,16 @@ class MyApp extends StatelessWidget {
   Widget build(
     BuildContext context,
   ) {
-    final loadingBloc = LoadingBloc();
-    final userBloc = UserBloc(
-      loadingBloc: loadingBloc,
-    );
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<LoadingBloc>.value(
-          value: loadingBloc,
+          value: LoadingBloc(),
         ),
         ChangeNotifierProvider<UserBloc>.value(
-          value: userBloc,
+          value: UserBloc(),
         ),
         ChangeNotifierProvider<DataBloc>.value(
-          value: DataBloc(
-            loadingBloc: loadingBloc,
-            userBloc: userBloc,
-          ),
+          value: DataBloc(),
         ),
       ],
       child: MaterialApp(

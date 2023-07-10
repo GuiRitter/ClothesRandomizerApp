@@ -1,5 +1,4 @@
 import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
-import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/api_url.enum.dart';
 import 'package:clothes_randomizer_app/constants/models.enum.dart';
 import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
@@ -11,11 +10,9 @@ import 'package:clothes_randomizer_app/models/result.dart';
 import 'package:clothes_randomizer_app/models/type_use.model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DataBloc extends ChangeNotifier {
-  final LoadingBloc loadingBloc;
-  final UserBloc userBloc;
-
   final _api = Settings.api;
 
   final List<LocalModel> _localList = <LocalModel>[];
@@ -27,11 +24,6 @@ class DataBloc extends ChangeNotifier {
       <PieceOfClothingTypeModel>[];
 
   final List<TypeUseModel> _typeUseList = <TypeUseModel>[];
-
-  DataBloc({
-    required this.loadingBloc,
-    required this.userBloc,
-  });
 
   List<LocalModel> get localList => List.unmodifiable(
         _localList,
@@ -51,6 +43,11 @@ class DataBloc extends ChangeNotifier {
       );
 
   Future<Result> getBaseData() async {
+    final loadingBloc = Provider.of<LoadingBloc>(
+      Settings.navigatorState.currentContext!,
+      listen: false,
+    );
+
     final cancelToken = CancelToken();
     loadingBloc.show(
       cancelToken: cancelToken,

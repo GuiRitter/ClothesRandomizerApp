@@ -3,6 +3,7 @@ import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/popup_menu.enum.dart';
 import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/main.dart';
+import 'package:clothes_randomizer_app/models/local.model.dart';
 import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -32,6 +33,7 @@ class _HomePageState extends State<HomePage> {
         0.0;
 
     // final halfFieldPadding = fieldPadding / 2.0;
+    final doubleFieldPadding = fieldPadding * 2.0;
 
     final mediaSize = MediaQuery.of(
       context,
@@ -77,25 +79,75 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.all(
             fieldPadding,
           ),
-          child: DropdownButton<PieceOfClothingTypeModel>(
-            value: dataBloc.pieceOfClothingTypeSelected,
-            icon: const Icon(
-              Icons.arrow_drop_down,
-            ),
-            onChanged: onPieceOfClothingTypeChanged,
-            items: dataBloc.pieceOfClothingTypeList
-                .map(
-                  (
-                    mPieceOfClothingType,
-                  ) =>
-                      DropdownMenuItem<PieceOfClothingTypeModel>(
-                    value: mPieceOfClothingType,
-                    child: Text(
-                      mPieceOfClothingType.name,
-                    ),
-                  ),
-                )
-                .toList(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                l10n.selectTypeString,
+              ),
+              DropdownButton<PieceOfClothingTypeModel>(
+                value: dataBloc.pieceOfClothingTypeSelected,
+                icon: const Icon(
+                  Icons.arrow_drop_down,
+                ),
+                isExpanded: true,
+                onChanged: onPieceOfClothingTypeChanged,
+                items: dataBloc.pieceOfClothingTypeList
+                    .map(
+                      (
+                        mPieceOfClothingType,
+                      ) =>
+                          DropdownMenuItem<PieceOfClothingTypeModel>(
+                        value: mPieceOfClothingType,
+                        child: Text(
+                          mPieceOfClothingType.name,
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  top: doubleFieldPadding,
+                ),
+                child: Text(
+                  l10n.selectLocationString,
+                ),
+              ),
+              FutureBuilder(
+                future: dataBloc.localList,
+                builder: (
+                  context,
+                  snapshot,
+                ) {
+                  if (snapshot.hasData) {
+                    return DropdownButton<LocalModel>(
+                      value: dataBloc.localSelected,
+                      icon: const Icon(
+                        Icons.arrow_drop_down,
+                      ),
+                      isExpanded: true,
+                      onChanged: onLocalChanged,
+                      items: (snapshot.data as List<LocalModel>)
+                          .map(
+                            (
+                              mLocal,
+                            ) =>
+                                DropdownMenuItem<LocalModel>(
+                              value: mLocal,
+                              child: Text(
+                                mLocal.name,
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    );
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
+                },
+              ),
+            ],
           ),
         ),
       ),
@@ -124,6 +176,17 @@ class _HomePageState extends State<HomePage> {
     );
 
     super.initState();
+  }
+
+  onLocalChanged(
+    LocalModel? value,
+  ) {
+    final dataBloc = Provider.of<DataBloc>(
+      context,
+      listen: false,
+    );
+
+    dataBloc.localSelected = value;
   }
 
   onPieceOfClothingTypeChanged(

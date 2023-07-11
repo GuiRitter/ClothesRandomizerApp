@@ -26,13 +26,50 @@ class DataBloc extends ChangeNotifier {
   final List<TypeUseModel> _typeUseList = <TypeUseModel>[];
 
   LocalModel? _localSelected;
-  PieceOfClothingModel? _pieceOfClothingSelected;
   PieceOfClothingTypeModel? _pieceOfClothingTypeSelected;
-  TypeUseModel? _typeUseSelected;
 
-  List<LocalModel> get localList => List.unmodifiable(
-        _localList,
-      );
+  Future<List<LocalModel>> get localList async {
+    if (_pieceOfClothingTypeSelected == null) {
+      return List<LocalModel>.empty();
+    }
+
+    final localFiltered = _localList.where(
+      (
+        wLocal,
+      ) =>
+          _typeUseList.any(
+        (
+          aTypeUse,
+        ) =>
+            (_pieceOfClothingTypeSelected!.id ==
+                aTypeUse.pieceOfClothingTypeId) &&
+            (wLocal.id == aTypeUse.localId),
+      ),
+    );
+
+    // if selected, see if in list; if is not, set first; also if null
+    if ((!localFiltered.contains(_localSelected)) || (_localSelected == null)) {
+      _localSelected = localFiltered.first;
+      notifyListeners();
+    }
+
+    return List<LocalModel>.unmodifiable(
+      localFiltered,
+    );
+  }
+
+  LocalModel? get localSelected => _localSelected;
+
+  set localSelected(LocalModel? newLocalSelected) {
+    if ((newLocalSelected != null) &&
+        (!_localList.contains(
+          newLocalSelected,
+        ))) {
+      return;
+    }
+    _localSelected = newLocalSelected;
+    notifyListeners();
+  }
 
   List<PieceOfClothingModel> get pieceOfClothingList => List.unmodifiable(
         _pieceOfClothingList,

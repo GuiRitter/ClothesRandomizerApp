@@ -25,5 +25,8 @@ class TypeUseModel extends TemplateModel {
   static List<TypeUseModel> fromList(
     List<dynamic> query,
   ) =>
-      TemplateModel.fromList(query, TypeUseModel.fromJson);
+      TemplateModel.fromList(
+        query,
+        TypeUseModel.fromJson,
+      );
 }

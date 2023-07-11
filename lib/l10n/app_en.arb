@@ -13,6 +13,7 @@
   "addTypeTitleString": "Add type",
   "appName": "Clothes Randomizer",
   "cancel": "Cancel",
+  "clothingTypeOrLocationNotSelected": "Clothing type and location must be selected to get the uses.",
   "deleteClothingString": "Remove this clothing item: ",
   "deleteLocationString": "Remove this location: ",
   "deleteTypeString": "Remove this clothing type: ",
@@ -37,5 +38,6 @@
   "useAddString": "Add use to this clothing item: ",
   "useRemoveString": "Remove use from this clothing item: ",
   "userID": "User ID",
+  "usesPlural": "{count, plural, =0{0 uses} =1{1 use} other{{count} uses}}",
   "usesString": "Uses:"
 }

@@ -26,5 +26,8 @@ class PieceOfClothingModel extends TemplateModel {
   static List<PieceOfClothingModel> fromList(
     List<dynamic> query,
   ) =>
-      TemplateModel.fromList(query, PieceOfClothingModel.fromJson);
+      TemplateModel.fromList(
+        query,
+        PieceOfClothingModel.fromJson,
+      );
 }

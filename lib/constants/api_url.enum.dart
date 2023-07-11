@@ -7,6 +7,9 @@ enum ApiUrl {
   ),
   signIn(
     path: "user/sign_in",
+  ),
+  uses(
+    path: "use/list",
   );
 
   final String path;

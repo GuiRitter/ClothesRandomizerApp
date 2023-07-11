@@ -9,11 +9,6 @@ class Result<DataType> {
   final ResultStatus status;
   final String? message;
 
-  bool hasMessageNotIn({
-    required ResultStatus status,
-  }) =>
-      (this.status != status);
-
   factory Result.fromException({
     required dynamic exception,
   }) {
@@ -39,16 +34,26 @@ class Result<DataType> {
     );
   }
 
-  Result.success()
-      : status = ResultStatus.success,
-        message = null,
-        data = null;
+  Result.success({
+    this.data,
+    this.message,
+  }) : status = ResultStatus.success;
+
+  Result.warning({
+    this.message,
+    this.data,
+  }) : status = ResultStatus.warning;
 
   Result._({
     this.data,
     required this.status,
     this.message,
   });
+
+  bool hasMessageNotIn({
+    required ResultStatus status,
+  }) =>
+      (this.status != status);
 
   Result<NewDataType> withData<NewDataType>({
     required NewDataType Function(dynamic) handler,

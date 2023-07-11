@@ -135,6 +135,37 @@ class _HomePageState extends State<HomePage> {
                     )
                     .toList(),
               ),
+              Padding(
+                padding: EdgeInsets.only(
+                  top: doubleFieldPadding,
+                ),
+                child: Text(
+                  l10n.usesString,
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: dataBloc.useList.length,
+                  itemBuilder: (
+                    context,
+                    index,
+                  ) =>
+                      TextButton(
+                    onPressed: () {},
+                    onLongPress: () {},
+                    child: ListTile(
+                      title: Text(
+                        dataBloc.useList[index].pieceOfClothing!.name,
+                      ),
+                      subtitle: Text(
+                        l10n.usesPlural(
+                          dataBloc.useList[index].counter,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -149,7 +180,11 @@ class _HomePageState extends State<HomePage> {
       listen: false,
     );
 
-    dataBloc.getBaseData().then(
+    dataBloc
+        .getBaseData(
+      refresh: false,
+    )
+        .then(
       (
         result,
       ) {

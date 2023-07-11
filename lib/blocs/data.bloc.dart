@@ -8,6 +8,7 @@ import 'package:clothes_randomizer_app/models/piece_of_clothing.model.dart';
 import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart';
 import 'package:clothes_randomizer_app/models/result.dart';
 import 'package:clothes_randomizer_app/models/type_use.model.dart';
+import 'package:clothes_randomizer_app/models/use.model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +25,8 @@ class DataBloc extends ChangeNotifier {
       <PieceOfClothingTypeModel>[];
 
   final List<TypeUseModel> _typeUseList = <TypeUseModel>[];
+
+  final List<UseModel> _useList = <UseModel>[];
 
   LocalModel? _localSelected;
   PieceOfClothingTypeModel? _pieceOfClothingTypeSelected;
@@ -54,21 +57,21 @@ class DataBloc extends ChangeNotifier {
 
   LocalModel? get localSelected => _localSelected;
 
-  set localSelected(LocalModel? newLocalSelected) {
-    if ((newLocalSelected != null) &&
-        (!_localList.contains(
-          newLocalSelected,
-        ))) {
+  set localSelected(
+    LocalModel? newLocalSelected,
+  ) {
+    if (((newLocalSelected != null) &&
+            (!_localList.contains(
+              newLocalSelected,
+            ))) ||
+        (_localSelected == newLocalSelected)) {
       return;
     }
 
     _localSelected = newLocalSelected;
-    notifyListeners();
-  }
 
-  List<PieceOfClothingModel> get pieceOfClothingList => List.unmodifiable(
-        _pieceOfClothingList,
-      );
+    getPieceOfClothingUseList();
+  }
 
   List<PieceOfClothingTypeModel> get pieceOfClothingTypeList =>
       List.unmodifiable(
@@ -79,11 +82,13 @@ class DataBloc extends ChangeNotifier {
       _pieceOfClothingTypeSelected;
 
   set pieceOfClothingTypeSelected(
-      PieceOfClothingTypeModel? newPieceOfClothingTypeSelected) {
-    if ((newPieceOfClothingTypeSelected != null) &&
-        (!pieceOfClothingTypeList.contains(
-          newPieceOfClothingTypeSelected,
-        ))) {
+    PieceOfClothingTypeModel? newPieceOfClothingTypeSelected,
+  ) {
+    if (((newPieceOfClothingTypeSelected != null) &&
+            (!pieceOfClothingTypeList.contains(
+              newPieceOfClothingTypeSelected,
+            ))) ||
+        (_pieceOfClothingTypeSelected == newPieceOfClothingTypeSelected)) {
       return;
     }
 
@@ -93,14 +98,18 @@ class DataBloc extends ChangeNotifier {
       _localSelected = localList.first;
     }
 
-    notifyListeners();
+    getPieceOfClothingUseList();
   }
 
-  List<TypeUseModel> get typeUseList => List.unmodifiable(
-        _typeUseList,
+  List<UseModel> get useList => List.unmodifiable(
+        _useList,
       );
 
-  Future<Result> getBaseData() async {
+  Future<Result> getBaseData({required bool refresh}) async {
+    if ((!refresh) && localList.isNotEmpty) {
+      return Result.success();
+    }
+
     final loadingBloc = Provider.of<LoadingBloc>(
       Settings.navigatorState.currentContext!,
       listen: false,
@@ -122,7 +131,9 @@ class DataBloc extends ChangeNotifier {
     );
 
     if (response.status == ResultStatus.success) {
-      _populateBaseData(response.data);
+      _populateBaseData(
+        data: response.data,
+      );
     }
 
     loadingBloc.notifyListeners();
@@ -134,6 +145,49 @@ class DataBloc extends ChangeNotifier {
       ) =>
           null,
     );
+  }
+
+  Future<Result> getPieceOfClothingUseList() async {
+    if ((_pieceOfClothingTypeSelected == null) || (_localSelected == null)) {
+      _useList.clear();
+      // TODO treat outside
+      return Result.warning();
+    }
+
+    final loadingBloc = Provider.of<LoadingBloc>(
+      Settings.navigatorState.currentContext!,
+      listen: false,
+    );
+
+    final cancelToken = CancelToken();
+    loadingBloc.show(
+      cancelToken: cancelToken,
+      isNotify: true,
+    );
+
+    var response = await _api.getResult(
+      ApiUrl.uses.path,
+      queryParameters: {
+        ModelsEnum.pieceOfClothingType.name: _pieceOfClothingTypeSelected!.id,
+        ModelsEnum.local.name: _localSelected!.id,
+      },
+      cancelToken: cancelToken,
+    );
+
+    loadingBloc.hide(
+      isNotify: false,
+    );
+
+    if (response.status == ResultStatus.success) {
+      _populateUseList(
+        data: response.data,
+      );
+    }
+
+    loadingBloc.notifyListeners();
+    notifyListeners();
+
+    return response;
   }
 
   _linkPieceOfClothings() {
@@ -167,9 +221,20 @@ class DataBloc extends ChangeNotifier {
     }
   }
 
-  _populateBaseData(
-    data,
-  ) {
+  _linkUses() {
+    for (final fUse in _useList) {
+      fUse.pieceOfClothing = _pieceOfClothingList.singleWhere(
+        (
+          swPieceOfClothing,
+        ) =>
+            fUse.pieceOfClothingId == swPieceOfClothing.id,
+      );
+    }
+  }
+
+  _populateBaseData({
+    required data,
+  }) {
     _localList.clear();
     _localList.addAll(
       LocalModel.fromList(
@@ -205,7 +270,20 @@ class DataBloc extends ChangeNotifier {
     );
 
     _linkTypeUses();
+  }
 
-    _localSelected = localList.first;
+  _populateUseList({
+    required data,
+  }) {
+    _useList.clear();
+    _useList.addAll(
+      UseModel.fromList(
+        data,
+      ),
+    );
+
+    _linkUses();
+
+    _useList.sort();
   }
 }

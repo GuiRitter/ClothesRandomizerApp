@@ -20,6 +20,19 @@ class LocalModel extends TemplateModel implements Comparable<LocalModel> {
       );
 
   @override
+  int get hashCode => id.hashCode;
+
+  @override
+  bool operator ==(
+    Object other,
+  ) {
+    if (other is! LocalModel) {
+      return false;
+    }
+    return id == other.id;
+  }
+
+  @override
   int compareTo(
     LocalModel other,
   ) =>
@@ -31,5 +44,8 @@ class LocalModel extends TemplateModel implements Comparable<LocalModel> {
   static List<LocalModel> fromList(
     List<dynamic> query,
   ) =>
-      TemplateModel.fromList(query, LocalModel.fromJson);
+      TemplateModel.fromList(
+        query,
+        LocalModel.fromJson,
+      );
 }

@@ -20,6 +20,19 @@ class PieceOfClothingTypeModel extends TemplateModel
       );
 
   @override
+  int get hashCode => id.hashCode;
+
+  @override
+  bool operator ==(
+    Object other,
+  ) {
+    if (other is! PieceOfClothingTypeModel) {
+      return false;
+    }
+    return id == other.id;
+  }
+
+  @override
   int compareTo(
     PieceOfClothingTypeModel other,
   ) =>
@@ -31,5 +44,8 @@ class PieceOfClothingTypeModel extends TemplateModel
   static List<PieceOfClothingTypeModel> fromList(
     List<dynamic> query,
   ) =>
-      TemplateModel.fromList(query, PieceOfClothingTypeModel.fromJson);
+      TemplateModel.fromList(
+        query,
+        PieceOfClothingTypeModel.fromJson,
+      );
 }

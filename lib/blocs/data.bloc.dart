@@ -28,7 +28,7 @@ class DataBloc extends ChangeNotifier {
   LocalModel? _localSelected;
   PieceOfClothingTypeModel? _pieceOfClothingTypeSelected;
 
-  Future<List<LocalModel>> get localList async {
+  List<LocalModel> get localList {
     if (_pieceOfClothingTypeSelected == null) {
       return List<LocalModel>.empty();
     }
@@ -47,12 +47,6 @@ class DataBloc extends ChangeNotifier {
       ),
     );
 
-    // if selected, see if in list; if is not, set first; also if null
-    if ((!localFiltered.contains(_localSelected)) || (_localSelected == null)) {
-      _localSelected = localFiltered.first;
-      notifyListeners();
-    }
-
     return List<LocalModel>.unmodifiable(
       localFiltered,
     );
@@ -67,6 +61,7 @@ class DataBloc extends ChangeNotifier {
         ))) {
       return;
     }
+
     _localSelected = newLocalSelected;
     notifyListeners();
   }
@@ -91,7 +86,13 @@ class DataBloc extends ChangeNotifier {
         ))) {
       return;
     }
+
     _pieceOfClothingTypeSelected = newPieceOfClothingTypeSelected;
+
+    if ((!localList.contains(_localSelected)) || (_localSelected == null)) {
+      _localSelected = localList.first;
+    }
+
     notifyListeners();
   }
 
@@ -204,5 +205,7 @@ class DataBloc extends ChangeNotifier {
     );
 
     _linkTypeUses();
+
+    _localSelected = localList.first;
   }
 }

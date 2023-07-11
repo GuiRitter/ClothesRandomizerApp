@@ -114,38 +114,26 @@ class _HomePageState extends State<HomePage> {
                   l10n.selectLocationString,
                 ),
               ),
-              FutureBuilder(
-                future: dataBloc.localList,
-                builder: (
-                  context,
-                  snapshot,
-                ) {
-                  if (snapshot.hasData) {
-                    return DropdownButton<LocalModel>(
-                      value: dataBloc.localSelected,
-                      icon: const Icon(
-                        Icons.arrow_drop_down,
+              DropdownButton<LocalModel>(
+                value: dataBloc.localSelected,
+                icon: const Icon(
+                  Icons.arrow_drop_down,
+                ),
+                isExpanded: true,
+                onChanged: onLocalChanged,
+                items: dataBloc.localList
+                    .map(
+                      (
+                        mLocal,
+                      ) =>
+                          DropdownMenuItem<LocalModel>(
+                        value: mLocal,
+                        child: Text(
+                          mLocal.name,
+                        ),
                       ),
-                      isExpanded: true,
-                      onChanged: onLocalChanged,
-                      items: (snapshot.data as List<LocalModel>)
-                          .map(
-                            (
-                              mLocal,
-                            ) =>
-                                DropdownMenuItem<LocalModel>(
-                              value: mLocal,
-                              child: Text(
-                                mLocal.name,
-                              ),
-                            ),
-                          )
-                          .toList(),
-                    );
-                  } else {
-                    return const CircularProgressIndicator();
-                  }
-                },
+                    )
+                    .toList(),
               ),
             ],
           ),

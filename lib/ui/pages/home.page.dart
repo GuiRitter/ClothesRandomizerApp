@@ -3,7 +3,7 @@ import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/popup_menu.enum.dart';
 import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/main.dart';
-import 'package:clothes_randomizer_app/models/local.model.dart';
+import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -77,21 +77,21 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.all(
             fieldPadding,
           ),
-          child: DropdownButton<LocalModel>(
-            value: dataBloc.localSelected,
+          child: DropdownButton<PieceOfClothingTypeModel>(
+            value: dataBloc.pieceOfClothingTypeSelected,
             icon: const Icon(
               Icons.arrow_drop_down,
             ),
-            onChanged: onLocalChanged,
-            items: dataBloc.localList
+            onChanged: onPieceOfClothingTypeChanged,
+            items: dataBloc.pieceOfClothingTypeList
                 .map(
                   (
-                    mLocal,
+                    mPieceOfClothingType,
                   ) =>
-                      DropdownMenuItem<LocalModel>(
-                    value: mLocal,
+                      DropdownMenuItem<PieceOfClothingTypeModel>(
+                    value: mPieceOfClothingType,
                     child: Text(
-                      mLocal.name,
+                      mPieceOfClothingType.name,
                     ),
                   ),
                 )
@@ -101,8 +101,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-// TODO get the dependency blocs using the context from the global key instead of from passing in the constructor
 
   @override
   void initState() {
@@ -128,10 +126,15 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  onLocalChanged(
-    LocalModel? value,
+  onPieceOfClothingTypeChanged(
+    PieceOfClothingTypeModel? value,
   ) {
-    // TODO
+    final dataBloc = Provider.of<DataBloc>(
+      context,
+      listen: false,
+    );
+
+    dataBloc.pieceOfClothingTypeSelected = value;
   }
 
   onSignOut({

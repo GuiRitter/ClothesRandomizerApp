@@ -1,6 +1,8 @@
 import 'package:clothes_randomizer_app/models/template.model.dart';
+import 'package:clothes_randomizer_app/utils/string.comparator.dart';
 
-class PieceOfClothingTypeModel extends TemplateModel {
+class PieceOfClothingTypeModel extends TemplateModel
+    implements Comparable<PieceOfClothingTypeModel> {
   final String id;
   final String name;
 
@@ -15,6 +17,15 @@ class PieceOfClothingTypeModel extends TemplateModel {
       PieceOfClothingTypeModel(
         id: json["id"],
         name: json["name"],
+      );
+
+  @override
+  int compareTo(
+    PieceOfClothingTypeModel other,
+  ) =>
+      StringComparator.compare(
+        alpha: name,
+        bravo: other.name,
       );
 
   static List<PieceOfClothingTypeModel> fromList(

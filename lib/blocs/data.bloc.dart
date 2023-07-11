@@ -25,10 +25,10 @@ class DataBloc extends ChangeNotifier {
 
   final List<TypeUseModel> _typeUseList = <TypeUseModel>[];
 
-  LocalModel? localSelected;
-  PieceOfClothingModel? pieceOfClothingSelected;
-  PieceOfClothingTypeModel? pieceOfClothingTypeSelected;
-  TypeUseModel? typeUseSelected;
+  LocalModel? _localSelected;
+  PieceOfClothingModel? _pieceOfClothingSelected;
+  PieceOfClothingTypeModel? _pieceOfClothingTypeSelected;
+  TypeUseModel? _typeUseSelected;
 
   List<LocalModel> get localList => List.unmodifiable(
         _localList,
@@ -42,6 +42,21 @@ class DataBloc extends ChangeNotifier {
       List.unmodifiable(
         _pieceOfClothingTypeList,
       );
+
+  PieceOfClothingTypeModel? get pieceOfClothingTypeSelected =>
+      _pieceOfClothingTypeSelected;
+
+  set pieceOfClothingTypeSelected(
+      PieceOfClothingTypeModel? newPieceOfClothingTypeSelected) {
+    if ((newPieceOfClothingTypeSelected != null) &&
+        (!pieceOfClothingTypeList.contains(
+          newPieceOfClothingTypeSelected,
+        ))) {
+      return;
+    }
+    _pieceOfClothingTypeSelected = newPieceOfClothingTypeSelected;
+    notifyListeners();
+  }
 
   List<TypeUseModel> get typeUseList => List.unmodifiable(
         _typeUseList,
@@ -131,6 +146,9 @@ class DataBloc extends ChangeNotifier {
         data[ModelsEnum.pieceOfClothingType.name],
       ),
     );
+    _pieceOfClothingTypeList.sort();
+
+    _pieceOfClothingTypeSelected ??= pieceOfClothingTypeList.first;
 
     _pieceOfClothingList.clear();
     _pieceOfClothingList.addAll(
@@ -149,7 +167,5 @@ class DataBloc extends ChangeNotifier {
     );
 
     _linkTypeUses();
-
-    localSelected ??= localList.first;
   }
 }

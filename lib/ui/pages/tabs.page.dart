@@ -27,7 +27,7 @@ class TabsPage extends StatelessWidget {
     } else if (userBloc.token != null) {
       return const HomePage();
     } else {
-      return SignInPage();
+      return const SignInPage();
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
@@ -9,51 +10,31 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SignInPage extends StatelessWidget {
-  static String? _userId;
-  static String? _password;
-
-  final _formKey = GlobalKey<FormState>();
-
-  SignInPage({
+class SignInPage extends StatefulWidget {
+  const SignInPage({
     super.key,
   });
+
+  @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  final _formKey = GlobalKey<FormState>();
+
+  String? _userId;
+  String? _password;
 
   @override
   Widget build(
     BuildContext context,
   ) {
-    final bloc = Provider.of<UserBloc>(
+    final userBloc = Provider.of<UserBloc>(
       context,
     );
 
-    SharedPreferences.getInstance().then(
-      (
-        prefs,
-      ) {
-        var token = prefs.getString(
-          Settings.token,
-        );
-        if (token?.isNotEmpty ?? false) {
-          bloc
-              .validateAndSetToken(
-            newToken: token,
-          )
-              .then(
-            (
-              result,
-            ) {
-              if (result.hasMessageNotIn(
-                status: ResultStatus.success,
-              )) {
-                showSnackBar(
-                  message: result.message,
-                );
-              }
-            },
-          );
-        }
-      },
+    final dataBloc = Provider.of<DataBloc>(
+      context,
     );
 
     var l10n = AppLocalizations.of(
@@ -134,7 +115,7 @@ class SignInPage extends StatelessWidget {
 
                         TextInput.finishAutofillContext();
 
-                        final result = await bloc.signIn(
+                        final result = await userBloc.signIn(
                           SignInModel(
                             userId: _userId ?? "",
                             password: _password ?? "",
@@ -146,6 +127,10 @@ class SignInPage extends StatelessWidget {
                         )) {
                           showSnackBar(
                             message: result.message,
+                          );
+                        } else {
+                          dataBloc.revalidateData(
+                            refresh: true,
                           );
                         }
                       },
@@ -161,5 +146,53 @@ class SignInPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    final userBloc = Provider.of<UserBloc>(
+      context,
+      listen: false,
+    );
+
+    final dataBloc = Provider.of<DataBloc>(
+      context,
+      listen: false,
+    );
+
+    SharedPreferences.getInstance().then(
+      (
+        prefs,
+      ) {
+        var token = prefs.getString(
+          Settings.token,
+        );
+        if (token?.isNotEmpty ?? false) {
+          userBloc
+              .validateAndSetToken(
+            newToken: token,
+          )
+              .then(
+            (
+              result,
+            ) {
+              if (result.hasMessageNotIn(
+                status: ResultStatus.success,
+              )) {
+                showSnackBar(
+                  message: result.message,
+                );
+              } else {
+                dataBloc.revalidateData(
+                  refresh: true,
+                );
+              }
+            },
+          );
+        }
+      },
+    );
+
+    super.initState();
   }
 }

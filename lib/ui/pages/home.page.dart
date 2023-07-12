@@ -1,24 +1,17 @@
 import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/popup_menu.enum.dart';
-import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
-import 'package:clothes_randomizer_app/main.dart';
 import 'package:clothes_randomizer_app/models/local.model.dart';
 import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({
     super.key,
   });
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   @override
   Widget build(
     BuildContext context,
@@ -71,7 +64,7 @@ class _HomePageState extends State<HomePage> {
             onSelected: (
               value,
             ) =>
-                onSignOut(
+                onPopupMenuItemPressed(
               context: context,
               value: value,
             ),
@@ -97,7 +90,13 @@ class _HomePageState extends State<HomePage> {
                   Icons.arrow_drop_down,
                 ),
                 isExpanded: true,
-                onChanged: onPieceOfClothingTypeChanged,
+                onChanged: (
+                  value,
+                ) =>
+                    onPieceOfClothingTypeChanged(
+                  context: context,
+                  value: value,
+                ),
                 items: dataBloc.pieceOfClothingTypeList
                     .map(
                       (
@@ -126,7 +125,13 @@ class _HomePageState extends State<HomePage> {
                   Icons.arrow_drop_down,
                 ),
                 isExpanded: true,
-                onChanged: onLocalChanged,
+                onChanged: (
+                  value,
+                ) =>
+                    onLocalChanged(
+                  context: context,
+                  value: value,
+                ),
                 items: dataBloc.localList
                     .map(
                       (
@@ -179,67 +184,45 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  @override
-  void initState() {
+  onLocalChanged({
+    required BuildContext context,
+    required LocalModel? value,
+  }) {
     final dataBloc = Provider.of<DataBloc>(
       context,
       listen: false,
     );
 
-    dataBloc
-        .getBaseData(
-      refresh: false,
-    )
-        .then(
-      (
-        result,
-      ) {
-        if (result.hasMessageNotIn(
-          status: ResultStatus.success,
-        )) {
-          showSnackBar(
-            message: result.message,
-          );
-        }
-      },
+    dataBloc.revalidateData(
+      newLocal: value,
     );
-
-    super.initState();
   }
 
-  onLocalChanged(
-    LocalModel? value,
-  ) {
+  onPieceOfClothingTypeChanged({
+    required BuildContext context,
+    required PieceOfClothingTypeModel? value,
+  }) {
     final dataBloc = Provider.of<DataBloc>(
       context,
       listen: false,
     );
 
-    dataBloc.localSelected = value;
-  }
-
-  onPieceOfClothingTypeChanged(
-    PieceOfClothingTypeModel? value,
-  ) {
-    final dataBloc = Provider.of<DataBloc>(
-      context,
-      listen: false,
+    dataBloc.revalidateData(
+      newPieceOfClothingType: value,
     );
-
-    dataBloc.pieceOfClothingTypeSelected = value;
   }
 
-  onSignOut({
+  onPopupMenuItemPressed({
     required BuildContext context,
     required PopupMenuEnum value,
   }) {
     switch (value) {
       case PopupMenuEnum.reload:
-        final userBloc = Provider.of<DataBloc>(
+        final dataBloc = Provider.of<DataBloc>(
           context,
           listen: false,
         );
-        userBloc.getBaseData(
+        dataBloc.revalidateData(
           refresh: true,
         );
         break;

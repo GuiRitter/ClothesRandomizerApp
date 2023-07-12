@@ -55,6 +55,12 @@ class _HomePageState extends State<HomePage> {
             ) {
               return [
                 PopupMenuItem(
+                  value: PopupMenuEnum.reload,
+                  child: Text(
+                    l10n.reload,
+                  ),
+                ),
+                PopupMenuItem(
                   value: PopupMenuEnum.signOut,
                   child: Text(
                     l10n.signOut,
@@ -227,7 +233,27 @@ class _HomePageState extends State<HomePage> {
     required BuildContext context,
     required PopupMenuEnum value,
   }) {
-    final userBloc = Provider.of<UserBloc>(context, listen: false);
-    userBloc.validateAndSetToken(newToken: null);
+    switch (value) {
+      case PopupMenuEnum.reload:
+        final userBloc = Provider.of<DataBloc>(
+          context,
+          listen: false,
+        );
+        userBloc.getBaseData(
+          refresh: true,
+        );
+        break;
+      case PopupMenuEnum.signOut:
+        final userBloc = Provider.of<UserBloc>(
+          context,
+          listen: false,
+        );
+        userBloc.validateAndSetToken(
+          newToken: null,
+        );
+        break;
+      default:
+        break;
+    }
   }
 }

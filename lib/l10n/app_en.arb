@@ -27,6 +27,7 @@
   "menuRemoveItem": "Remove use",
   "password": "Password",
   "randomizeButtonString": "Randomize",
+  "reload": "Reload data",
   "selectLocationString": "Select a location:",
   "selectTitleClothingString": "Clothing items",
   "selectTitleLocationString": "Locations",

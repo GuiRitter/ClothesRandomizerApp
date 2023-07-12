@@ -66,6 +66,12 @@ class Result<DataType> {
         ),
       );
 
+  Result withoutData() => Result._(
+        status: status,
+        message: message,
+        data: null,
+      );
+
   static ResultStatus getFromHttpStatus({
     required int? httpStatus,
   }) {

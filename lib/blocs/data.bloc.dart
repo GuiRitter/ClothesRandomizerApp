@@ -29,7 +29,9 @@ class DataBloc extends ChangeNotifier {
   final List<UseModel> _useList = <UseModel>[];
 
   LocalModel? _localSelected;
+  LocalModel? _localSelectedLast;
   PieceOfClothingTypeModel? _pieceOfClothingTypeSelected;
+  PieceOfClothingTypeModel? _pieceOfClothingTypeSelectedLast;
 
   List<LocalModel> get localList {
     if (_pieceOfClothingTypeSelected == null) {
@@ -84,18 +86,17 @@ class DataBloc extends ChangeNotifier {
   set pieceOfClothingTypeSelected(
     PieceOfClothingTypeModel? newPieceOfClothingTypeSelected,
   ) {
-    if (((newPieceOfClothingTypeSelected != null) &&
-            (!pieceOfClothingTypeList.contains(
-              newPieceOfClothingTypeSelected,
-            ))) ||
-        (_pieceOfClothingTypeSelected == newPieceOfClothingTypeSelected)) {
-      return;
+    if ((newPieceOfClothingTypeSelected != null) &&
+        (!pieceOfClothingTypeList.contains(
+          newPieceOfClothingTypeSelected,
+        ))) {
+      newPieceOfClothingTypeSelected = _pieceOfClothingTypeList.firstOrNull;
     }
 
     _pieceOfClothingTypeSelected = newPieceOfClothingTypeSelected;
 
     if ((!localList.contains(_localSelected)) || (_localSelected == null)) {
-      _localSelected = localList.first;
+      _localSelected = localList.firstOrNull;
     }
 
     getPieceOfClothingUseList();
@@ -105,8 +106,10 @@ class DataBloc extends ChangeNotifier {
         _useList,
       );
 
-  Future<Result> getBaseData({required bool refresh}) async {
-    if ((!refresh) && localList.isNotEmpty) {
+  Future<Result> getBaseData({
+    required bool refresh,
+  }) async {
+    if ((!refresh) && _pieceOfClothingTypeList.isNotEmpty) {
       return Result.success();
     }
 
@@ -139,18 +142,23 @@ class DataBloc extends ChangeNotifier {
     loadingBloc.notifyListeners();
     notifyListeners();
 
-    return response.withData(
-      handler: (
-        data,
-      ) =>
-          null,
-    );
+    return response.withoutData();
   }
 
   Future<Result> getPieceOfClothingUseList() async {
+    // TODO almost good...
+    // if ((_pieceOfClothingTypeSelectedLast != _pieceOfClothingTypeSelected) ||
+    //     (_localSelectedLast != _localSelected)) {
+    //   _pieceOfClothingTypeSelectedLast = _pieceOfClothingTypeSelected;
+    //   _localSelectedLast = _localSelected;
+    // } else {
+    //   return Result.warning();
+    // }
+
     if ((_pieceOfClothingTypeSelected == null) || (_localSelected == null)) {
-      _useList.clear();
-      // TODO treat outside
+      _populateUseList(
+        data: [],
+      );
       return Result.warning();
     }
 
@@ -187,7 +195,7 @@ class DataBloc extends ChangeNotifier {
     loadingBloc.notifyListeners();
     notifyListeners();
 
-    return response;
+    return response.withoutData();
   }
 
   _linkPieceOfClothings() {
@@ -235,14 +243,6 @@ class DataBloc extends ChangeNotifier {
   _populateBaseData({
     required data,
   }) {
-    _localList.clear();
-    _localList.addAll(
-      LocalModel.fromList(
-        data[ModelsEnum.local.name],
-      ),
-    );
-    _localList.sort();
-
     _pieceOfClothingTypeList.clear();
     _pieceOfClothingTypeList.addAll(
       PieceOfClothingTypeModel.fromList(
@@ -251,16 +251,13 @@ class DataBloc extends ChangeNotifier {
     );
     _pieceOfClothingTypeList.sort();
 
-    _pieceOfClothingTypeSelected ??= pieceOfClothingTypeList.first;
-
-    _pieceOfClothingList.clear();
-    _pieceOfClothingList.addAll(
-      PieceOfClothingModel.fromList(
-        data[ModelsEnum.pieceOfClothing.name],
+    _localList.clear();
+    _localList.addAll(
+      LocalModel.fromList(
+        data[ModelsEnum.local.name],
       ),
     );
-
-    _linkPieceOfClothings();
+    _localList.sort();
 
     _typeUseList.clear();
     _typeUseList.addAll(
@@ -270,6 +267,18 @@ class DataBloc extends ChangeNotifier {
     );
 
     _linkTypeUses();
+
+    pieceOfClothingTypeSelected =
+        _pieceOfClothingTypeSelected ?? pieceOfClothingTypeList.firstOrNull;
+
+    _pieceOfClothingList.clear();
+    _pieceOfClothingList.addAll(
+      PieceOfClothingModel.fromList(
+        data[ModelsEnum.pieceOfClothing.name],
+      ),
+    );
+
+    _linkPieceOfClothings();
   }
 
   _populateUseList({

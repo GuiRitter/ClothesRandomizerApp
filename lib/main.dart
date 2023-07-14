@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
@@ -74,6 +76,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<DataBloc>.value(
           value: DataBloc(),
+        ),
+        Provider<Random>.value(
+          value: Random(),
         ),
       ],
       child: MaterialApp(

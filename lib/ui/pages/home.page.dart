@@ -177,12 +177,31 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
+              ElevatedButton(
+                onPressed: () => onRandomPressed(
+                  context: context,
+                ),
+                child: Text(
+                  l10n.randomizeButtonString,
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
   }
+
+  onDialogCancelPressed({
+    required BuildContext context,
+  }) =>
+      Navigator.pop(
+        context,
+      );
+
+  onDialogOkPressed({
+    required BuildContext context,
+  }) {}
 
   onLocalChanged({
     required BuildContext context,
@@ -238,5 +257,53 @@ class HomePage extends StatelessWidget {
       default:
         break;
     }
+  }
+
+  onRandomPressed({
+    required BuildContext context,
+  }) async {
+    final l10n = AppLocalizations.of(
+      context,
+    )!;
+
+    final dataBloc = Provider.of<DataBloc>(
+      context,
+      listen: false,
+    );
+    dataBloc.drawPieceOfClothing();
+
+    await showDialog(
+      context: context,
+      builder: (
+        context,
+      ) =>
+          AlertDialog(
+        content: Text(
+          "${l10n.useAddString} ${dataBloc.useSelected!.pieceOfClothing!.name}",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => onDialogCancelPressed(
+              context: context,
+            ),
+            child: Text(
+              l10n.cancel,
+              textAlign: TextAlign.end,
+            ),
+          ),
+          TextButton(
+            onPressed: () => onDialogOkPressed(
+              context: context,
+            ),
+            child: Text(
+              l10n.ok,
+              textAlign: TextAlign.end,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    dataBloc.clearUseSelected();
   }
 }

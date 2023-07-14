@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
 import 'package:clothes_randomizer_app/constants/api_url.enum.dart';
 import 'package:clothes_randomizer_app/constants/models.enum.dart';
 import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
+import 'package:clothes_randomizer_app/models/candidate.model.dart';
 import 'package:clothes_randomizer_app/models/local.model.dart';
 import 'package:clothes_randomizer_app/models/piece_of_clothing.model.dart';
 import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart';
@@ -30,6 +33,7 @@ class DataBloc extends ChangeNotifier {
 
   LocalModel? _localSelected;
   PieceOfClothingTypeModel? _pieceOfClothingTypeSelected;
+  UseModel? _useSelected;
 
   List<LocalModel> get localList {
     if (_pieceOfClothingTypeSelected == null) {
@@ -68,6 +72,47 @@ class DataBloc extends ChangeNotifier {
   List<UseModel> get useList => List.unmodifiable(
         _useList,
       );
+
+  UseModel? get useSelected => _useSelected;
+
+  clearUseSelected() => _useSelected = null;
+
+  drawPieceOfClothing() {
+    if ((_pieceOfClothingTypeSelected == null) || (_localSelected == null)) {
+      return;
+    }
+    final candidateList = _useList.fold(
+      CandidateModel.empty(),
+      (
+        previousCandidates,
+        fUse,
+      ) {
+        if ((previousCandidates.lowestCount == null) ||
+            (fUse.counter < previousCandidates.lowestCount!)) {
+          return CandidateModel.withLowestCountAndUse(
+            lowestCount: fUse.counter,
+            useModel: fUse,
+          );
+        } else if (fUse.counter == previousCandidates.lowestCount!) {
+          return previousCandidates.withUse(
+            anotherUse: fUse,
+          );
+        }
+        return previousCandidates;
+      },
+    ).list;
+
+    final rng = Provider.of<Random>(
+      Settings.navigatorState.currentContext!,
+      listen: false,
+    );
+
+    _useSelected = candidateList.elementAt(
+      rng.nextInt(
+        candidateList.length,
+      ),
+    );
+  }
 
   Future<Result> getPieceOfClothingUseList() async {
     if ((_pieceOfClothingTypeSelected == null) || (_localSelected == null)) {

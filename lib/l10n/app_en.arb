@@ -25,6 +25,7 @@
   "mainTypeString": "Manage clothing types",
   "menuAddItem": "Add use",
   "menuRemoveItem": "Remove use",
+  "ok": "Ok",
   "password": "Password",
   "randomizeButtonString": "Randomize",
   "reload": "Reload data",

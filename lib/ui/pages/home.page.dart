@@ -1,10 +1,9 @@
 import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
-import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
-import 'package:clothes_randomizer_app/constants/home_popup_menu.enum.dart';
 import 'package:clothes_randomizer_app/constants/use_popup_menu.enum.dart';
+import 'package:clothes_randomizer_app/dialogs.dart';
 import 'package:clothes_randomizer_app/models/local.model.dart';
 import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart';
-import 'package:clothes_randomizer_app/ui/widgets/home/theme_option.widget.dart';
+import 'package:clothes_randomizer_app/ui/widgets/app_bar_popup_menu.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -45,40 +44,7 @@ class HomePage extends StatelessWidget {
           l10n.title,
         ),
         actions: [
-          // TODO maybe add to other pages; investigate in Material Design the role of this button
-          PopupMenuButton<HomePopupMenuEnum>(
-            itemBuilder: (
-              context,
-            ) {
-              return [
-                PopupMenuItem<HomePopupMenuEnum>(
-                  value: HomePopupMenuEnum.reload,
-                  child: Text(
-                    l10n.reload,
-                  ),
-                ),
-                PopupMenuItem<HomePopupMenuEnum>(
-                  value: HomePopupMenuEnum.theme,
-                  child: Text(
-                    l10n.appTheme,
-                  ),
-                ),
-                PopupMenuItem<HomePopupMenuEnum>(
-                  value: HomePopupMenuEnum.signOut,
-                  child: Text(
-                    l10n.signOut,
-                  ),
-                ),
-              ];
-            },
-            onSelected: (
-              value,
-            ) =>
-                onHomePopupMenuItemPressed(
-              context: context,
-              value: value,
-            ),
-          ),
+          AppBarPopupMenuWidget.signedIn(),
         ],
       ),
       body: SizedBox(
@@ -245,89 +211,9 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  onDialogCancelPressed({
-    required BuildContext context,
-  }) =>
-      Navigator.pop(
-        context,
-      );
-
   onDialogOkPressed({
     required BuildContext context,
   }) {}
-
-  onHomePopupMenuItemPressed({
-    required BuildContext context,
-    required HomePopupMenuEnum value,
-  }) {
-    final l10n = AppLocalizations.of(
-      context,
-    )!;
-
-    switch (value) {
-      case HomePopupMenuEnum.reload:
-        final dataBloc = Provider.of<DataBloc>(
-          context,
-          listen: false,
-        );
-        dataBloc.revalidateData(
-          refresh: true,
-        );
-        break;
-      case HomePopupMenuEnum.theme:
-        showDialog(
-          context: context,
-          builder: (
-            context,
-          ) =>
-              AlertDialog(
-            title: Text(
-              l10n.chooseTheme,
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ThemeOptionWidget(
-                  themeMode: ThemeMode.dark,
-                  title: l10n.darkTheme,
-                ),
-                ThemeOptionWidget(
-                  themeMode: ThemeMode.light,
-                  title: l10n.lightTheme,
-                ),
-                ThemeOptionWidget(
-                  themeMode: ThemeMode.system,
-                  title: l10n.systemTheme,
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => onDialogCancelPressed(
-                  context: context,
-                ),
-                child: Text(
-                  l10n.cancel,
-                  textAlign: TextAlign.end,
-                ),
-              ),
-            ],
-          ),
-        );
-        break;
-      case HomePopupMenuEnum.signOut:
-        final userBloc = Provider.of<UserBloc>(
-          context,
-          listen: false,
-        );
-        userBloc.validateAndSetToken(
-          newToken: null,
-        );
-        break;
-      default:
-        break;
-    }
-  }
 
   onLocalChanged({
     required BuildContext context,

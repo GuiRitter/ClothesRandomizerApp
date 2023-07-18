@@ -4,6 +4,7 @@ import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
 import 'package:clothes_randomizer_app/main.dart';
 import 'package:clothes_randomizer_app/models/sign_in.model.dart';
+import 'package:clothes_randomizer_app/ui/widgets/app_bar_popup_menu.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -49,6 +50,9 @@ class _SignInPageState extends State<SignInPage> {
           )!
               .title,
         ),
+        actions: [
+          AppBarPopupMenuWidget.signedOut(),
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(

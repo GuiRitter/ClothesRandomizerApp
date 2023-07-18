@@ -1,4 +1,4 @@
-enum HomePopupMenuEnum {
+enum AppBarPopupMenuEnum {
   reload,
   local,
   pieceOfClothingType,

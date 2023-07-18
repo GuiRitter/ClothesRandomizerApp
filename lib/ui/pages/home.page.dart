@@ -1,9 +1,9 @@
 import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/popup_menu.enum.dart';
-import 'package:clothes_randomizer_app/main.dart';
 import 'package:clothes_randomizer_app/models/local.model.dart';
 import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart';
+import 'package:clothes_randomizer_app/ui/widgets/home/theme_option.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +43,7 @@ class HomePage extends StatelessWidget {
           l10n.title,
         ),
         actions: [
+          // TODO maybe add to other pages; investigate in Material Design the role of this button
           PopupMenuButton(
             itemBuilder: (
               context,
@@ -269,32 +270,17 @@ class HomePage extends StatelessWidget {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ListTile(
-                  onTap: () => onThemeTapped(
-                    context: context,
-                    themeMode: ThemeMode.dark,
-                  ),
-                  title: Text(
-                    l10n.darkTheme,
-                  ),
+                ThemeOptionWidget(
+                  themeMode: ThemeMode.dark,
+                  title: l10n.darkTheme,
                 ),
-                ListTile(
-                  onTap: () => onThemeTapped(
-                    context: context,
-                    themeMode: ThemeMode.light,
-                  ),
-                  title: Text(
-                    l10n.lightTheme,
-                  ),
+                ThemeOptionWidget(
+                  themeMode: ThemeMode.light,
+                  title: l10n.lightTheme,
                 ),
-                ListTile(
-                  onTap: () => onThemeTapped(
-                    context: context,
-                    themeMode: ThemeMode.system,
-                  ),
-                  title: Text(
-                    l10n.systemTheme,
-                  ),
+                ThemeOptionWidget(
+                  themeMode: ThemeMode.system,
+                  title: l10n.systemTheme,
                 ),
               ],
             ),
@@ -372,16 +358,5 @@ class HomePage extends StatelessWidget {
     );
 
     dataBloc.clearUseSelected();
-  }
-
-  onThemeTapped({
-    required BuildContext context,
-    required ThemeMode themeMode,
-  }) {
-    MyApp.themeNotifier.value = themeMode;
-
-    Navigator.pop(
-      context,
-    );
   }
 }

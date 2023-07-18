@@ -9,6 +9,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // flutter build web --base-href "/clothes_randomizer/"
 
@@ -69,6 +70,43 @@ class MyApp extends StatelessWidget {
   Widget build(
     BuildContext context,
   ) {
+    SharedPreferences.getInstance().then(
+      (
+        prefs,
+      ) {
+        final themeName = prefs.getString(
+          Settings.theme,
+        );
+
+        if (themeName?.isNotEmpty ?? false) {
+          final theme = ThemeMode.values.byName(
+            themeName!,
+          );
+
+          themeNotifier.value = theme;
+        }
+      },
+    );
+
+    final themeLightTemplate = ThemeData();
+
+    final themeLight = themeLightTemplate.copyWith(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: Colors.black,
+      ),
+    );
+
+    final themeDarkTemplate = ThemeData.dark();
+
+    final themeDark = themeDarkTemplate.copyWith(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: Colors.white,
+      ),
+      listTileTheme: const ListTileThemeData().copyWith(
+        iconColor: themeDarkTemplate.textTheme.bodySmall?.color,
+      ),
+    );
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<LoadingBloc>.value(
@@ -90,16 +128,8 @@ class MyApp extends StatelessWidget {
           title: getTitle(
             context,
           ),
-          theme: ThemeData().copyWith(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.black,
-            ),
-          ),
-          darkTheme: ThemeData.dark().copyWith(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.white,
-            ),
-          ),
+          theme: themeLight,
+          darkTheme: themeDark,
           themeMode: themeMode,
           // flutter gen-l10n
           localizationsDelegates: AppLocalizations.localizationsDelegates,

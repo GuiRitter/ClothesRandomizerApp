@@ -18,4 +18,6 @@ class Settings {
       GlobalKey<NavigatorState>();
 
   static String token = "token";
+
+  static String theme = "theme";
 }

@@ -1,6 +1,7 @@
 import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
-import 'package:clothes_randomizer_app/constants/popup_menu.enum.dart';
+import 'package:clothes_randomizer_app/constants/home_popup_menu.enum.dart';
+import 'package:clothes_randomizer_app/constants/use_popup_menu.enum.dart';
 import 'package:clothes_randomizer_app/models/local.model.dart';
 import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart';
 import 'package:clothes_randomizer_app/ui/widgets/home/theme_option.widget.dart';
@@ -21,10 +22,11 @@ class HomePage extends StatelessWidget {
       context,
     )!;
 
-    final fieldPadding = Theme.of(
-          context,
-        ).textTheme.labelLarge?.fontSize ??
-        0.0;
+    final theme = Theme.of(
+      context,
+    );
+
+    final fieldPadding = theme.textTheme.labelLarge?.fontSize ?? 0.0;
 
     // final halfFieldPadding = fieldPadding / 2.0;
     final doubleFieldPadding = fieldPadding * 2.0;
@@ -44,25 +46,25 @@ class HomePage extends StatelessWidget {
         ),
         actions: [
           // TODO maybe add to other pages; investigate in Material Design the role of this button
-          PopupMenuButton(
+          PopupMenuButton<HomePopupMenuEnum>(
             itemBuilder: (
               context,
             ) {
               return [
-                PopupMenuItem(
-                  value: PopupMenuEnum.reload,
+                PopupMenuItem<HomePopupMenuEnum>(
+                  value: HomePopupMenuEnum.reload,
                   child: Text(
                     l10n.reload,
                   ),
                 ),
-                PopupMenuItem(
-                  value: PopupMenuEnum.theme,
+                PopupMenuItem<HomePopupMenuEnum>(
+                  value: HomePopupMenuEnum.theme,
                   child: Text(
                     l10n.appTheme,
                   ),
                 ),
-                PopupMenuItem(
-                  value: PopupMenuEnum.signOut,
+                PopupMenuItem<HomePopupMenuEnum>(
+                  value: HomePopupMenuEnum.signOut,
                   child: Text(
                     l10n.signOut,
                   ),
@@ -72,7 +74,7 @@ class HomePage extends StatelessWidget {
             onSelected: (
               value,
             ) =>
-                onPopupMenuItemPressed(
+                onHomePopupMenuItemPressed(
               context: context,
               value: value,
             ),
@@ -168,21 +170,64 @@ class HomePage extends StatelessWidget {
                   itemBuilder: (
                     context,
                     index,
-                  ) =>
-                      TextButton(
-                    onPressed: () {},
-                    onLongPress: () {},
-                    child: ListTile(
+                  ) {
+                    final use = dataBloc.useList[index];
+
+                    return ListTile(
                       title: Text(
-                        dataBloc.useList[index].pieceOfClothing!.name,
+                        use.pieceOfClothing!.name,
                       ),
                       subtitle: Text(
                         l10n.usesPlural(
-                          dataBloc.useList[index].counter,
+                          use.counter,
                         ),
                       ),
-                    ),
-                  ),
+                      trailing: PopupMenuButton<UsePopupMenuEnum>(
+                        itemBuilder: (
+                          context,
+                        ) {
+                          final List<PopupMenuItem<UsePopupMenuEnum>>
+                              optionList = [
+                            PopupMenuItem<UsePopupMenuEnum>(
+                              value: UsePopupMenuEnum.add,
+                              child: Text(
+                                l10n.menuAddItem,
+                              ),
+                            ),
+                          ];
+
+                          if (use.counter > 0) {
+                            optionList.add(
+                              PopupMenuItem<UsePopupMenuEnum>(
+                                value: UsePopupMenuEnum.remove,
+                                child: Text(
+                                  l10n.menuRemoveItem,
+                                ),
+                              ),
+                            );
+                          }
+
+                          optionList.add(
+                            PopupMenuItem<UsePopupMenuEnum>(
+                              value: UsePopupMenuEnum.cancel,
+                              child: Text(
+                                l10n.cancel,
+                              ),
+                            ),
+                          );
+
+                          return optionList;
+                        },
+                        onSelected: (
+                          value,
+                        ) =>
+                            onUsePopupMenuItemPressed(
+                          context: context,
+                          value: value,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
               ElevatedButton(
@@ -211,44 +256,16 @@ class HomePage extends StatelessWidget {
     required BuildContext context,
   }) {}
 
-  onLocalChanged({
+  onHomePopupMenuItemPressed({
     required BuildContext context,
-    required LocalModel? value,
-  }) {
-    final dataBloc = Provider.of<DataBloc>(
-      context,
-      listen: false,
-    );
-
-    dataBloc.revalidateData(
-      newLocal: value,
-    );
-  }
-
-  onPieceOfClothingTypeChanged({
-    required BuildContext context,
-    required PieceOfClothingTypeModel? value,
-  }) {
-    final dataBloc = Provider.of<DataBloc>(
-      context,
-      listen: false,
-    );
-
-    dataBloc.revalidateData(
-      newPieceOfClothingType: value,
-    );
-  }
-
-  onPopupMenuItemPressed({
-    required BuildContext context,
-    required PopupMenuEnum value,
+    required HomePopupMenuEnum value,
   }) {
     final l10n = AppLocalizations.of(
       context,
     )!;
 
     switch (value) {
-      case PopupMenuEnum.reload:
+      case HomePopupMenuEnum.reload:
         final dataBloc = Provider.of<DataBloc>(
           context,
           listen: false,
@@ -257,7 +274,7 @@ class HomePage extends StatelessWidget {
           refresh: true,
         );
         break;
-      case PopupMenuEnum.theme:
+      case HomePopupMenuEnum.theme:
         showDialog(
           context: context,
           builder: (
@@ -298,7 +315,7 @@ class HomePage extends StatelessWidget {
           ),
         );
         break;
-      case PopupMenuEnum.signOut:
+      case HomePopupMenuEnum.signOut:
         final userBloc = Provider.of<UserBloc>(
           context,
           listen: false,
@@ -310,6 +327,34 @@ class HomePage extends StatelessWidget {
       default:
         break;
     }
+  }
+
+  onLocalChanged({
+    required BuildContext context,
+    required LocalModel? value,
+  }) {
+    final dataBloc = Provider.of<DataBloc>(
+      context,
+      listen: false,
+    );
+
+    dataBloc.revalidateData(
+      newLocal: value,
+    );
+  }
+
+  onPieceOfClothingTypeChanged({
+    required BuildContext context,
+    required PieceOfClothingTypeModel? value,
+  }) {
+    final dataBloc = Provider.of<DataBloc>(
+      context,
+      listen: false,
+    );
+
+    dataBloc.revalidateData(
+      newPieceOfClothingType: value,
+    );
   }
 
   onRandomPressed({
@@ -358,5 +403,34 @@ class HomePage extends StatelessWidget {
     );
 
     dataBloc.clearUseSelected();
+  }
+
+  onUsePopupMenuItemPressed({
+    required BuildContext context,
+    required UsePopupMenuEnum value,
+  }) {
+    // TODO
+    // switch (value) {
+    //   case HomePopupMenuEnum.reload:
+    //     final dataBloc = Provider.of<DataBloc>(
+    //       context,
+    //       listen: false,
+    //     );
+    //     dataBloc.revalidateData(
+    //       refresh: true,
+    //     );
+    //     break;
+    //   case HomePopupMenuEnum.signOut:
+    //     final userBloc = Provider.of<UserBloc>(
+    //       context,
+    //       listen: false,
+    //     );
+    //     userBloc.validateAndSetToken(
+    //       newToken: null,
+    //     );
+    //     break;
+    //   default:
+    //     break;
+    // }
   }
 }

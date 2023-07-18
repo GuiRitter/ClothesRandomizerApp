@@ -59,8 +59,9 @@ String treatException({
 }
 
 class MyApp extends StatelessWidget {
-  static final ValueNotifier<ThemeMode> themeNotifier =
-      ValueNotifier(ThemeMode.system);
+  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(
+    ThemeMode.system,
+  );
 
   const MyApp({
     super.key,
@@ -124,7 +125,12 @@ class MyApp extends StatelessWidget {
       ],
       child: ValueListenableBuilder<ThemeMode>(
         valueListenable: themeNotifier,
-        builder: (_, themeMode, __) => MaterialApp(
+        builder: (
+          _,
+          themeMode,
+          __,
+        ) =>
+            MaterialApp(
           title: getTitle(
             context,
           ),

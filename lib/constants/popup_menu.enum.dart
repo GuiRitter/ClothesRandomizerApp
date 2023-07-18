@@ -3,5 +3,6 @@ enum PopupMenuEnum {
   local,
   pieceOfClothingType,
   pieceOfClothing,
+  theme,
   signOut;
 }

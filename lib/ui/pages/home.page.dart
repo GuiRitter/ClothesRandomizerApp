@@ -1,6 +1,7 @@
 import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/popup_menu.enum.dart';
+import 'package:clothes_randomizer_app/main.dart';
 import 'package:clothes_randomizer_app/models/local.model.dart';
 import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +52,12 @@ class HomePage extends StatelessWidget {
                   value: PopupMenuEnum.reload,
                   child: Text(
                     l10n.reload,
+                  ),
+                ),
+                PopupMenuItem(
+                  value: PopupMenuEnum.theme,
+                  child: Text(
+                    l10n.appTheme,
                   ),
                 ),
                 PopupMenuItem(
@@ -235,6 +242,10 @@ class HomePage extends StatelessWidget {
     required BuildContext context,
     required PopupMenuEnum value,
   }) {
+    final l10n = AppLocalizations.of(
+      context,
+    )!;
+
     switch (value) {
       case PopupMenuEnum.reload:
         final dataBloc = Provider.of<DataBloc>(
@@ -243,6 +254,62 @@ class HomePage extends StatelessWidget {
         );
         dataBloc.revalidateData(
           refresh: true,
+        );
+        break;
+      case PopupMenuEnum.theme:
+        showDialog(
+          context: context,
+          builder: (
+            context,
+          ) =>
+              AlertDialog(
+            title: Text(
+              l10n.chooseTheme,
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  onTap: () => onThemeTapped(
+                    context: context,
+                    themeMode: ThemeMode.dark,
+                  ),
+                  title: Text(
+                    l10n.darkTheme,
+                  ),
+                ),
+                ListTile(
+                  onTap: () => onThemeTapped(
+                    context: context,
+                    themeMode: ThemeMode.light,
+                  ),
+                  title: Text(
+                    l10n.lightTheme,
+                  ),
+                ),
+                ListTile(
+                  onTap: () => onThemeTapped(
+                    context: context,
+                    themeMode: ThemeMode.system,
+                  ),
+                  title: Text(
+                    l10n.systemTheme,
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => onDialogCancelPressed(
+                  context: context,
+                ),
+                child: Text(
+                  l10n.cancel,
+                  textAlign: TextAlign.end,
+                ),
+              ),
+            ],
+          ),
         );
         break;
       case PopupMenuEnum.signOut:
@@ -305,5 +372,16 @@ class HomePage extends StatelessWidget {
     );
 
     dataBloc.clearUseSelected();
+  }
+
+  onThemeTapped({
+    required BuildContext context,
+    required ThemeMode themeMode,
+  }) {
+    MyApp.themeNotifier.value = themeMode;
+
+    Navigator.pop(
+      context,
+    );
   }
 }

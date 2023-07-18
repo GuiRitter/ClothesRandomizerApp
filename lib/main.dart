@@ -58,6 +58,9 @@ String treatException({
 }
 
 class MyApp extends StatelessWidget {
+  static final ValueNotifier<ThemeMode> themeNotifier =
+      ValueNotifier(ThemeMode.system);
+
   const MyApp({
     super.key,
   });
@@ -81,28 +84,30 @@ class MyApp extends StatelessWidget {
           value: Random(),
         ),
       ],
-      child: MaterialApp(
-        title: getTitle(
-          context,
-        ),
-        theme: Theme.of(
-          context,
-        ).copyWith(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.black,
+      child: ValueListenableBuilder<ThemeMode>(
+        valueListenable: themeNotifier,
+        builder: (_, themeMode, __) => MaterialApp(
+          title: getTitle(
+            context,
           ),
-        ),
-        darkTheme: ThemeData.dark().copyWith(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.white,
+          theme: ThemeData().copyWith(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.black,
+            ),
           ),
+          darkTheme: ThemeData.dark().copyWith(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.white,
+            ),
+          ),
+          themeMode: themeMode,
+          // flutter gen-l10n
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          scaffoldMessengerKey: Settings.snackState,
+          navigatorKey: Settings.navigatorState,
+          home: const TabsPage(),
         ),
-        // flutter gen-l10n
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        scaffoldMessengerKey: Settings.snackState,
-        navigatorKey: Settings.navigatorState,
-        home: const TabsPage(),
       ),
     );
   }

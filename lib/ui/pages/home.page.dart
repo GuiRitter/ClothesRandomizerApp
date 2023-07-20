@@ -1,7 +1,6 @@
 import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
 import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/constants/sign.enum.dart';
-import 'package:clothes_randomizer_app/constants/use_popup_menu.enum.dart';
 import 'package:clothes_randomizer_app/dialogs.dart';
 import 'package:clothes_randomizer_app/models/local.model.dart';
 import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart';
@@ -151,7 +150,7 @@ class HomePage extends StatelessWidget {
                           use.counter,
                         ),
                       ),
-                      trailing: PopupMenuButton<UsePopupMenuEnum>(
+                      trailing: PopupMenuButton<SignEnum?>(
                         onOpened: () => onUsePopupMenuOpened(
                           context: context,
                           use: use,
@@ -162,10 +161,9 @@ class HomePage extends StatelessWidget {
                         itemBuilder: (
                           context,
                         ) {
-                          final List<PopupMenuItem<UsePopupMenuEnum>>
-                              optionList = [
-                            PopupMenuItem<UsePopupMenuEnum>(
-                              value: UsePopupMenuEnum.add,
+                          final List<PopupMenuItem<SignEnum>> optionList = [
+                            PopupMenuItem<SignEnum>(
+                              value: SignEnum.plus,
                               child: Text(
                                 l10n.menuAddItem,
                               ),
@@ -174,8 +172,8 @@ class HomePage extends StatelessWidget {
 
                           if (use.counter > 0) {
                             optionList.add(
-                              PopupMenuItem<UsePopupMenuEnum>(
-                                value: UsePopupMenuEnum.remove,
+                              PopupMenuItem<SignEnum>(
+                                value: SignEnum.minus,
                                 child: Text(
                                   l10n.menuRemoveItem,
                                 ),
@@ -184,8 +182,8 @@ class HomePage extends StatelessWidget {
                           }
 
                           optionList.add(
-                            PopupMenuItem<UsePopupMenuEnum>(
-                              value: UsePopupMenuEnum.cancel,
+                            PopupMenuItem<SignEnum>(
+                              value: null,
                               child: Text(
                                 l10n.cancel,
                               ),
@@ -223,6 +221,7 @@ class HomePage extends StatelessWidget {
 
   onDialogOkPressed({
     required BuildContext context,
+    required SignEnum sign,
   }) {
     final dataBloc = Provider.of<DataBloc>(
       context,
@@ -230,7 +229,7 @@ class HomePage extends StatelessWidget {
     );
 
     dataBloc.updateUse(
-      sign: SignEnum.plus,
+      sign: sign,
     );
 
     onDialogCancelPressed(
@@ -269,10 +268,6 @@ class HomePage extends StatelessWidget {
   onRandomPressed({
     required BuildContext context,
   }) async {
-    final l10n = AppLocalizations.of(
-      context,
-    )!;
-
     final dataBloc = Provider.of<DataBloc>(
       context,
       listen: false,
@@ -284,39 +279,11 @@ class HomePage extends StatelessWidget {
     }
 
     if (context.mounted) {
-      await showDialog(
+      await showConfirmDialog(
         context: context,
-        builder: (
-          context,
-        ) =>
-            AlertDialog(
-          content: Text(
-            "${l10n.useAddString} ${dataBloc.useSelected!.pieceOfClothing!.name}",
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => onDialogCancelPressed(
-                context: context,
-              ),
-              child: Text(
-                l10n.cancel,
-                textAlign: TextAlign.end,
-              ),
-            ),
-            TextButton(
-              onPressed: () => onDialogOkPressed(
-                context: context,
-              ),
-              child: Text(
-                l10n.ok,
-                textAlign: TextAlign.end,
-              ),
-            ),
-          ],
-        ),
+        dataBloc: dataBloc,
+        sign: SignEnum.plus,
       );
-
-      dataBloc.clearUseSelected();
     }
   }
 
@@ -333,27 +300,22 @@ class HomePage extends StatelessWidget {
 
   onUsePopupMenuItemPressed({
     required BuildContext context,
-    required UsePopupMenuEnum value,
+    required SignEnum? value,
   }) {
     final dataBloc = Provider.of<DataBloc>(
       context,
       listen: false,
     );
 
-    switch (value) {
-      case UsePopupMenuEnum.add:
-        dataBloc.updateUse(
-          sign: SignEnum.plus,
-        );
-        break;
-      case UsePopupMenuEnum.remove:
-        dataBloc.updateUse(
-          sign: SignEnum.minus,
-        );
-        break;
-      default:
-        break;
+    if (value == null) {
+      return;
     }
+
+    showConfirmDialog(
+      context: context,
+      dataBloc: dataBloc,
+      sign: value,
+    );
   }
 
   onUsePopupMenuOpened({
@@ -368,5 +330,50 @@ class HomePage extends StatelessWidget {
     dataBloc.selectUse(
       use: use,
     );
+  }
+
+  Future<void> showConfirmDialog({
+    required BuildContext context,
+    required DataBloc dataBloc,
+    required SignEnum sign,
+  }) async {
+    final l10n = AppLocalizations.of(
+      context,
+    )!;
+
+    await showDialog(
+      context: context,
+      builder: (
+        context,
+      ) =>
+          AlertDialog(
+        content: Text(
+          "${(sign == SignEnum.minus) ? l10n.useRemoveString : l10n.useAddString} ${dataBloc.useSelected!.pieceOfClothing!.name}",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => onDialogCancelPressed(
+              context: context,
+            ),
+            child: Text(
+              l10n.cancel,
+              textAlign: TextAlign.end,
+            ),
+          ),
+          TextButton(
+            onPressed: () => onDialogOkPressed(
+              context: context,
+              sign: sign,
+            ),
+            child: Text(
+              l10n.ok,
+              textAlign: TextAlign.end,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    dataBloc.clearUseSelected();
   }
 }

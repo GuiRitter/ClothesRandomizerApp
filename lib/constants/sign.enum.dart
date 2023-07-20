@@ -1,0 +1,4 @@
+enum SignEnum {
+  minus,
+  plus;
+}

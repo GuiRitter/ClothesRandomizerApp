@@ -10,6 +10,12 @@ enum ApiUrl {
   ),
   uses(
     path: "use/list",
+  ),
+  incrementUse(
+    path: "use/increment",
+  ),
+  decrementUse(
+    path: "use/decrement",
   );
 
   final String path;

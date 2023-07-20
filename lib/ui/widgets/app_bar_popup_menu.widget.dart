@@ -2,7 +2,7 @@ import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/app_bar_popup_menu.enum.dart';
 import 'package:clothes_randomizer_app/dialogs.dart';
-import 'package:clothes_randomizer_app/ui/widgets/home/theme_option.widget.dart';
+import 'package:clothes_randomizer_app/ui/widgets/theme_option.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -84,7 +84,7 @@ class AppBarPopupMenuWidget extends StatelessWidget {
           listen: false,
         );
         dataBloc.revalidateData(
-          refresh: true,
+          refreshBaseData: true,
         );
         break;
       case AppBarPopupMenuEnum.theme:

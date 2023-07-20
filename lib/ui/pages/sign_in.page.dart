@@ -134,7 +134,7 @@ class _SignInPageState extends State<SignInPage> {
                           );
                         } else {
                           dataBloc.revalidateData(
-                            refresh: true,
+                            refreshBaseData: true,
                           );
                         }
                       },
@@ -188,7 +188,7 @@ class _SignInPageState extends State<SignInPage> {
                 );
               } else {
                 dataBloc.revalidateData(
-                  refresh: true,
+                  refreshBaseData: true,
                 );
               }
             },

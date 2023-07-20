@@ -5,6 +5,7 @@ import 'package:clothes_randomizer_app/constants/api_url.enum.dart';
 import 'package:clothes_randomizer_app/constants/models.enum.dart';
 import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
+import 'package:clothes_randomizer_app/constants/sign.enum.dart';
 import 'package:clothes_randomizer_app/models/candidate.model.dart';
 import 'package:clothes_randomizer_app/models/local.model.dart';
 import 'package:clothes_randomizer_app/models/piece_of_clothing.model.dart';
@@ -12,6 +13,7 @@ import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart'
 import 'package:clothes_randomizer_app/models/result.dart';
 import 'package:clothes_randomizer_app/models/type_use.model.dart';
 import 'package:clothes_randomizer_app/models/use.model.dart';
+import 'package:clothes_randomizer_app/models/use_update.model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -77,9 +79,9 @@ class DataBloc extends ChangeNotifier {
 
   clearUseSelected() => _useSelected = null;
 
-  drawPieceOfClothing() {
+  Future<Result> drawPieceOfClothing() async {
     if ((_pieceOfClothingTypeSelected == null) || (_localSelected == null)) {
-      return;
+      return Result.warning();
     }
     final candidateList = _useList.fold(
       CandidateModel.empty(),
@@ -112,63 +114,22 @@ class DataBloc extends ChangeNotifier {
         candidateList.length,
       ),
     );
-  }
 
-  Future<Result> getPieceOfClothingUseList() async {
-    if ((_pieceOfClothingTypeSelected == null) || (_localSelected == null)) {
-      _populateUseList(
-        data: [],
-      );
-      return Result.warning();
-    }
-
-    final loadingBloc = Provider.of<LoadingBloc>(
-      Settings.navigatorState.currentContext!,
-      listen: false,
-    );
-
-    final cancelToken = CancelToken();
-    loadingBloc.show(
-      cancelToken: cancelToken,
-      isNotify: true,
-    );
-
-    var response = await _api.getResult(
-      ApiUrl.uses.path,
-      queryParameters: {
-        ModelsEnum.pieceOfClothingType.name: _pieceOfClothingTypeSelected!.id,
-        ModelsEnum.local.name: _localSelected!.id,
-      },
-      cancelToken: cancelToken,
-    );
-
-    loadingBloc.hide(
-      isNotify: false,
-    );
-
-    if (response.status == ResultStatus.success) {
-      _populateUseList(
-        data: response.data,
-      );
-    }
-
-    loadingBloc.notifyListeners();
-    notifyListeners();
-
-    return response.withoutData();
+    return Result.success();
   }
 
   Future<Result> revalidateData({
-    bool refresh = false,
+    bool refreshBaseData = false,
     PieceOfClothingTypeModel? newPieceOfClothingType,
     LocalModel? newLocal,
+    bool refreshUseList = false,
   }) async {
     final loadingBloc = Provider.of<LoadingBloc>(
       Settings.navigatorState.currentContext!,
       listen: false,
     );
 
-    if (refresh) {
+    if (refreshBaseData) {
       final cancelToken = CancelToken();
       loadingBloc.show(
         cancelToken: cancelToken,
@@ -226,7 +187,7 @@ class DataBloc extends ChangeNotifier {
       _populateUseList(
         data: [],
       );
-    } else if (pieceOfClothingTypeChanged || localChanged) {
+    } else if (refreshUseList || pieceOfClothingTypeChanged || localChanged) {
       final cancelToken = CancelToken();
       loadingBloc.show(
         cancelToken: cancelToken,
@@ -257,6 +218,56 @@ class DataBloc extends ChangeNotifier {
     notifyListeners();
 
     return Result.success();
+  }
+
+  selectUse({
+    required UseModel use,
+  }) =>
+      _useSelected = use;
+
+  Future<Result> updateUse({
+    required SignEnum sign,
+  }) async {
+    if ((_useSelected == null) || (_localSelected == null)) {
+      return Result.warning();
+    }
+
+    final loadingBloc = Provider.of<LoadingBloc>(
+      Settings.navigatorState.currentContext!,
+      listen: false,
+    );
+
+    final cancelToken = CancelToken();
+    loadingBloc.show(
+      cancelToken: cancelToken,
+      isNotify: true,
+    );
+
+    var response = await _api.postResult(
+      (sign == SignEnum.plus)
+          ? ApiUrl.incrementUse.path
+          : ApiUrl.decrementUse.path,
+      data: UseUpdateModel(
+        pieceOfClothing: _useSelected!.pieceOfClothing!.id,
+        local: _localSelected!.id,
+      ).toJson(),
+      cancelToken: cancelToken,
+    );
+
+    loadingBloc.hide(
+      isNotify: false,
+    );
+
+    if (response.status == ResultStatus.success) {
+      return revalidateData(
+        refreshUseList: true,
+      );
+    }
+
+    loadingBloc.notifyListeners();
+    notifyListeners();
+
+    return response.withoutData();
   }
 
   _linkPieceOfClothings() {

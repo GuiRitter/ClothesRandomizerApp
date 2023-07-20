@@ -1,8 +1,11 @@
 import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
+import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
+import 'package:clothes_randomizer_app/constants/sign.enum.dart';
 import 'package:clothes_randomizer_app/constants/use_popup_menu.enum.dart';
 import 'package:clothes_randomizer_app/dialogs.dart';
 import 'package:clothes_randomizer_app/models/local.model.dart';
 import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart';
+import 'package:clothes_randomizer_app/models/use.model.dart';
 import 'package:clothes_randomizer_app/ui/widgets/app_bar_popup_menu.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -149,6 +152,13 @@ class HomePage extends StatelessWidget {
                         ),
                       ),
                       trailing: PopupMenuButton<UsePopupMenuEnum>(
+                        onOpened: () => onUsePopupMenuOpened(
+                          context: context,
+                          use: use,
+                        ),
+                        onCanceled: () => onUsePopupMenuCanceled(
+                          context: context,
+                        ),
                         itemBuilder: (
                           context,
                         ) {
@@ -213,7 +223,20 @@ class HomePage extends StatelessWidget {
 
   onDialogOkPressed({
     required BuildContext context,
-  }) {}
+  }) {
+    final dataBloc = Provider.of<DataBloc>(
+      context,
+      listen: false,
+    );
+
+    dataBloc.updateUse(
+      sign: SignEnum.plus,
+    );
+
+    onDialogCancelPressed(
+      context: context,
+    );
+  }
 
   onLocalChanged({
     required BuildContext context,
@@ -254,38 +277,55 @@ class HomePage extends StatelessWidget {
       context,
       listen: false,
     );
-    dataBloc.drawPieceOfClothing();
+    final drawResult = await dataBloc.drawPieceOfClothing();
 
-    await showDialog(
-      context: context,
-      builder: (
-        context,
-      ) =>
-          AlertDialog(
-        content: Text(
-          "${l10n.useAddString} ${dataBloc.useSelected!.pieceOfClothing!.name}",
+    if (drawResult.status != ResultStatus.success) {
+      return;
+    }
+
+    if (context.mounted) {
+      await showDialog(
+        context: context,
+        builder: (
+          context,
+        ) =>
+            AlertDialog(
+          content: Text(
+            "${l10n.useAddString} ${dataBloc.useSelected!.pieceOfClothing!.name}",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => onDialogCancelPressed(
+                context: context,
+              ),
+              child: Text(
+                l10n.cancel,
+                textAlign: TextAlign.end,
+              ),
+            ),
+            TextButton(
+              onPressed: () => onDialogOkPressed(
+                context: context,
+              ),
+              child: Text(
+                l10n.ok,
+                textAlign: TextAlign.end,
+              ),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => onDialogCancelPressed(
-              context: context,
-            ),
-            child: Text(
-              l10n.cancel,
-              textAlign: TextAlign.end,
-            ),
-          ),
-          TextButton(
-            onPressed: () => onDialogOkPressed(
-              context: context,
-            ),
-            child: Text(
-              l10n.ok,
-              textAlign: TextAlign.end,
-            ),
-          ),
-        ],
-      ),
+      );
+
+      dataBloc.clearUseSelected();
+    }
+  }
+
+  onUsePopupMenuCanceled({
+    required BuildContext context,
+  }) {
+    final dataBloc = Provider.of<DataBloc>(
+      context,
+      listen: false,
     );
 
     dataBloc.clearUseSelected();
@@ -295,28 +335,38 @@ class HomePage extends StatelessWidget {
     required BuildContext context,
     required UsePopupMenuEnum value,
   }) {
-    // TODO
-    // switch (value) {
-    //   case HomePopupMenuEnum.reload:
-    //     final dataBloc = Provider.of<DataBloc>(
-    //       context,
-    //       listen: false,
-    //     );
-    //     dataBloc.revalidateData(
-    //       refresh: true,
-    //     );
-    //     break;
-    //   case HomePopupMenuEnum.signOut:
-    //     final userBloc = Provider.of<UserBloc>(
-    //       context,
-    //       listen: false,
-    //     );
-    //     userBloc.validateAndSetToken(
-    //       newToken: null,
-    //     );
-    //     break;
-    //   default:
-    //     break;
-    // }
+    final dataBloc = Provider.of<DataBloc>(
+      context,
+      listen: false,
+    );
+
+    switch (value) {
+      case UsePopupMenuEnum.add:
+        dataBloc.updateUse(
+          sign: SignEnum.plus,
+        );
+        break;
+      case UsePopupMenuEnum.remove:
+        dataBloc.updateUse(
+          sign: SignEnum.minus,
+        );
+        break;
+      default:
+        break;
+    }
+  }
+
+  onUsePopupMenuOpened({
+    required BuildContext context,
+    required UseModel use,
+  }) {
+    final dataBloc = Provider.of<DataBloc>(
+      context,
+      listen: false,
+    );
+
+    dataBloc.selectUse(
+      use: use,
+    );
   }
 }

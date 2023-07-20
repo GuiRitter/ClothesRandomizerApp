@@ -30,7 +30,7 @@ class HomePage extends StatelessWidget {
     final fieldPadding = theme.textTheme.labelLarge?.fontSize ?? 0.0;
 
     // final halfFieldPadding = fieldPadding / 2.0;
-    final doubleFieldPadding = fieldPadding * 2.0;
+    // final doubleFieldPadding = fieldPadding * 2.0;
 
     final mediaSize = MediaQuery.of(
       context,
@@ -52,159 +52,179 @@ class HomePage extends StatelessWidget {
       body: SizedBox(
         height: mediaSize.height,
         width: mediaSize.width,
-        child: Padding(
-          padding: EdgeInsets.all(
-            fieldPadding,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                l10n.selectTypeString,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(
+                fieldPadding,
               ),
-              DropdownButton<PieceOfClothingTypeModel>(
-                value: dataBloc.pieceOfClothingTypeSelected,
-                icon: const Icon(
-                  Icons.arrow_drop_down,
-                ),
-                isExpanded: true,
-                onChanged: (
-                  value,
-                ) =>
-                    onPieceOfClothingTypeChanged(
-                  context: context,
-                  value: value,
-                ),
-                items: dataBloc.pieceOfClothingTypeList
-                    .map(
-                      (
-                        mPieceOfClothingType,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    l10n.selectTypeString,
+                  ),
+                  ListTile(
+                    title: DropdownButton<PieceOfClothingTypeModel>(
+                      value: dataBloc.pieceOfClothingTypeSelected,
+                      icon: const Icon(
+                        Icons.arrow_drop_down,
+                      ),
+                      isExpanded: true,
+                      onChanged: (
+                        value,
                       ) =>
-                          DropdownMenuItem<PieceOfClothingTypeModel>(
-                        value: mPieceOfClothingType,
-                        child: Text(
-                          mPieceOfClothingType.name,
-                        ),
+                          onPieceOfClothingTypeChanged(
+                        context: context,
+                        value: value,
                       ),
-                    )
-                    .toList(),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: doubleFieldPadding,
-                ),
-                child: Text(
-                  l10n.selectLocationString,
-                ),
-              ),
-              DropdownButton<LocalModel>(
-                value: dataBloc.localSelected,
-                icon: const Icon(
-                  Icons.arrow_drop_down,
-                ),
-                isExpanded: true,
-                onChanged: (
-                  value,
-                ) =>
-                    onLocalChanged(
-                  context: context,
-                  value: value,
-                ),
-                items: dataBloc.localList
-                    .map(
-                      (
-                        mLocal,
-                      ) =>
-                          DropdownMenuItem<LocalModel>(
-                        value: mLocal,
-                        child: Text(
-                          mLocal.name,
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: doubleFieldPadding,
-                ),
-                child: Text(
-                  l10n.usesString,
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: dataBloc.useList.length,
-                  itemBuilder: (
-                    context,
-                    index,
-                  ) {
-                    final use = dataBloc.useList[index];
-
-                    return ListTile(
-                      title: Text(
-                        use.pieceOfClothing!.name,
-                      ),
-                      subtitle: Text(
-                        l10n.usesPlural(
-                          use.counter,
-                        ),
-                      ),
-                      trailing: PopupMenuButton<SignEnum?>(
-                        onOpened: () => onUsePopupMenuOpened(
-                          context: context,
-                          use: use,
-                        ),
-                        onCanceled: () => onUsePopupMenuCanceled(
-                          context: context,
-                        ),
-                        itemBuilder: (
-                          context,
-                        ) {
-                          final List<PopupMenuItem<SignEnum>> optionList = [
-                            PopupMenuItem<SignEnum>(
-                              value: SignEnum.plus,
+                      items: dataBloc.pieceOfClothingTypeList
+                          .map(
+                            (
+                              mPieceOfClothingType,
+                            ) =>
+                                DropdownMenuItem<PieceOfClothingTypeModel>(
+                              value: mPieceOfClothingType,
                               child: Text(
-                                l10n.menuAddItem,
+                                mPieceOfClothingType.name,
                               ),
                             ),
-                          ];
-
-                          if (use.counter > 0) {
-                            optionList.add(
-                              PopupMenuItem<SignEnum>(
-                                value: SignEnum.minus,
-                                child: Text(
-                                  l10n.menuRemoveItem,
-                                ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                  SizedBox.square(
+                    dimension: fieldPadding,
+                  ),
+                  Text(
+                    l10n.selectLocationString,
+                  ),
+                  ListTile(
+                    title: DropdownButton<LocalModel>(
+                      value: dataBloc.localSelected,
+                      icon: const Icon(
+                        Icons.arrow_drop_down,
+                      ),
+                      isExpanded: true,
+                      onChanged: (
+                        value,
+                      ) =>
+                          onLocalChanged(
+                        context: context,
+                        value: value,
+                      ),
+                      items: dataBloc.localList
+                          .map(
+                            (
+                              mLocal,
+                            ) =>
+                                DropdownMenuItem<LocalModel>(
+                              value: mLocal,
+                              child: Text(
+                                mLocal.name,
                               ),
-                            );
-                          }
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                  SizedBox.square(
+                    dimension: fieldPadding,
+                  ),
+                  Text(
+                    l10n.usesString,
+                  ),
+                ],
+              ),
+            ),
+            const Divider(
+              indent: 0,
+              endIndent: 0,
+              height: 0,
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: dataBloc.useList.length,
+                itemBuilder: (
+                  context,
+                  index,
+                ) {
+                  final use = dataBloc.useList[index];
 
+                  return ListTile(
+                    title: Text(
+                      use.pieceOfClothing!.name,
+                    ),
+                    subtitle: Text(
+                      l10n.usesPlural(
+                        use.counter,
+                      ),
+                    ),
+                    trailing: PopupMenuButton<SignEnum?>(
+                      onOpened: () => onUsePopupMenuOpened(
+                        context: context,
+                        use: use,
+                      ),
+                      onCanceled: () => onUsePopupMenuCanceled(
+                        context: context,
+                      ),
+                      itemBuilder: (
+                        context,
+                      ) {
+                        final List<PopupMenuItem<SignEnum>> optionList = [
+                          PopupMenuItem<SignEnum>(
+                            value: SignEnum.plus,
+                            child: Text(
+                              l10n.menuAddItem,
+                            ),
+                          ),
+                        ];
+
+                        if (use.counter > 0) {
                           optionList.add(
                             PopupMenuItem<SignEnum>(
-                              value: null,
+                              value: SignEnum.minus,
                               child: Text(
-                                l10n.cancel,
+                                l10n.menuRemoveItem,
                               ),
                             ),
                           );
+                        }
 
-                          return optionList;
-                        },
-                        onSelected: (
-                          value,
-                        ) =>
-                            onUsePopupMenuItemPressed(
-                          context: context,
-                          value: value,
-                        ),
+                        optionList.add(
+                          PopupMenuItem<SignEnum>(
+                            value: null,
+                            child: Text(
+                              l10n.cancel,
+                            ),
+                          ),
+                        );
+
+                        return optionList;
+                      },
+                      onSelected: (
+                        value,
+                      ) =>
+                          onUsePopupMenuItemPressed(
+                        context: context,
+                        value: value,
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
-              ElevatedButton(
+            ),
+            const Divider(
+              indent: 0,
+              endIndent: 0,
+              height: 0,
+            ),
+            Padding(
+              padding: EdgeInsets.all(
+                fieldPadding,
+              ),
+              child: ElevatedButton(
                 onPressed: () => onRandomPressed(
                   context: context,
                 ),
@@ -212,8 +232,8 @@ class HomePage extends StatelessWidget {
                   l10n.randomizeButtonString,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

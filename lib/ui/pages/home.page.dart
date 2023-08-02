@@ -38,19 +38,21 @@ class _HomePageState extends State<HomePage> {
           final BuildContext? context = _appBarKey.currentContext;
 
           if (context != null) {
-            final dynamic renderObject = context.findRenderObject();
+            final statefulElement = context as StatefulElement;
 
-            final RenderSemanticsAnnotations renderSemanticsAnnotation =
-                renderObject! as RenderSemanticsAnnotations;
+            SingleChildRenderObjectElement? singleChildRenderObjectElement;
 
-            final debugCreator =
-                renderSemanticsAnnotation.debugCreator as DebugCreator;
-
-            final singleChildRenderObjectElement =
-                debugCreator.element as SingleChildRenderObjectElement;
+            statefulElement.visitChildElements(
+              (
+                element,
+              ) {
+                singleChildRenderObjectElement =
+                    element as SingleChildRenderObjectElement;
+              },
+            );
 
             final semantics =
-                singleChildRenderObjectElement.widget as Semantics;
+                singleChildRenderObjectElement!.widget as Semantics;
 
             final annotatedRegion = semantics.child as AnnotatedRegion;
 

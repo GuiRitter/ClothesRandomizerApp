@@ -7,13 +7,68 @@ import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart'
 import 'package:clothes_randomizer_app/models/use.model.dart';
 import 'package:clothes_randomizer_app/ui/widgets/app_bar_popup_menu.widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({
     super.key,
   });
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final GlobalKey _appBarKey = GlobalKey();
+
+  static final appBarElevationNotifier = ValueNotifier<double>(
+    0,
+  );
+
+  getAppBarElevation() => Future.delayed(
+        const Duration(
+          microseconds: 0,
+        ),
+      ).then(
+        (
+          value,
+        ) {
+          final BuildContext? context = _appBarKey.currentContext;
+
+          if (context != null) {
+            final dynamic renderObject = context.findRenderObject();
+
+            final RenderSemanticsAnnotations renderSemanticsAnnotation =
+                renderObject! as RenderSemanticsAnnotations;
+
+            final debugCreator =
+                renderSemanticsAnnotation.debugCreator as DebugCreator;
+
+            final singleChildRenderObjectElement =
+                debugCreator.element as SingleChildRenderObjectElement;
+
+            final semantics =
+                singleChildRenderObjectElement.widget as Semantics;
+
+            final annotatedRegion = semantics.child as AnnotatedRegion;
+
+            final material = annotatedRegion.child as Material;
+
+            appBarElevationNotifier.value = material.elevation;
+          } else {
+            getAppBarElevation();
+          }
+        },
+      );
+
+  @override
+  void initState() {
+    super.initState();
+
+    getAppBarElevation();
+  }
 
   @override
   Widget build(
@@ -42,6 +97,7 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        key: _appBarKey,
         title: Text(
           l10n.title,
         ),
@@ -55,93 +111,100 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Padding(
-              padding: EdgeInsets.all(
-                fieldPadding,
+            ValueListenableBuilder<double>(
+              valueListenable: appBarElevationNotifier,
+              builder: (
+                context,
+                value,
+                child,
+              ) =>
+                  Material(
+                elevation: value,
+                child: child,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    l10n.selectTypeString,
-                  ),
-                  ListTile(
-                    title: DropdownButton<PieceOfClothingTypeModel>(
-                      value: dataBloc.pieceOfClothingTypeSelected,
-                      icon: const Icon(
-                        Icons.arrow_drop_down,
-                      ),
-                      isExpanded: true,
-                      onChanged: (
-                        value,
-                      ) =>
-                          onPieceOfClothingTypeChanged(
-                        context: context,
-                        value: value,
-                      ),
-                      items: dataBloc.pieceOfClothingTypeList
-                          .map(
-                            (
-                              mPieceOfClothingType,
-                            ) =>
-                                DropdownMenuItem<PieceOfClothingTypeModel>(
-                              value: mPieceOfClothingType,
-                              child: Text(
-                                mPieceOfClothingType.name,
-                              ),
-                            ),
-                          )
-                          .toList(),
+              child: Padding(
+                padding: EdgeInsets.all(
+                  fieldPadding,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      l10n.selectTypeString,
                     ),
-                  ),
-                  SizedBox.square(
-                    dimension: fieldPadding,
-                  ),
-                  Text(
-                    l10n.selectLocationString,
-                  ),
-                  ListTile(
-                    title: DropdownButton<LocalModel>(
-                      value: dataBloc.localSelected,
-                      icon: const Icon(
-                        Icons.arrow_drop_down,
-                      ),
-                      isExpanded: true,
-                      onChanged: (
-                        value,
-                      ) =>
-                          onLocalChanged(
-                        context: context,
-                        value: value,
-                      ),
-                      items: dataBloc.localList
-                          .map(
-                            (
-                              mLocal,
-                            ) =>
-                                DropdownMenuItem<LocalModel>(
-                              value: mLocal,
-                              child: Text(
-                                mLocal.name,
+                    ListTile(
+                      title: DropdownButton<PieceOfClothingTypeModel>(
+                        value: dataBloc.pieceOfClothingTypeSelected,
+                        icon: const Icon(
+                          Icons.arrow_drop_down,
+                        ),
+                        isExpanded: true,
+                        onChanged: (
+                          value,
+                        ) =>
+                            onPieceOfClothingTypeChanged(
+                          context: context,
+                          value: value,
+                        ),
+                        items: dataBloc.pieceOfClothingTypeList
+                            .map(
+                              (
+                                mPieceOfClothingType,
+                              ) =>
+                                  DropdownMenuItem<PieceOfClothingTypeModel>(
+                                value: mPieceOfClothingType,
+                                child: Text(
+                                  mPieceOfClothingType.name,
+                                ),
                               ),
-                            ),
-                          )
-                          .toList(),
+                            )
+                            .toList(),
+                      ),
                     ),
-                  ),
-                  SizedBox.square(
-                    dimension: fieldPadding,
-                  ),
-                  Text(
-                    l10n.usesString,
-                  ),
-                ],
+                    SizedBox.square(
+                      dimension: fieldPadding,
+                    ),
+                    Text(
+                      l10n.selectLocationString,
+                    ),
+                    ListTile(
+                      title: DropdownButton<LocalModel>(
+                        value: dataBloc.localSelected,
+                        icon: const Icon(
+                          Icons.arrow_drop_down,
+                        ),
+                        isExpanded: true,
+                        onChanged: (
+                          value,
+                        ) =>
+                            onLocalChanged(
+                          context: context,
+                          value: value,
+                        ),
+                        items: dataBloc.localList
+                            .map(
+                              (
+                                mLocal,
+                              ) =>
+                                  DropdownMenuItem<LocalModel>(
+                                value: mLocal,
+                                child: Text(
+                                  mLocal.name,
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                    SizedBox.square(
+                      dimension: fieldPadding,
+                    ),
+                    Text(
+                      l10n.usesString,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const Divider(
-              indent: 0,
-              endIndent: 0,
-              height: 0,
             ),
             Expanded(
               child: ListView.builder(
@@ -215,25 +278,24 @@ class HomePage extends StatelessWidget {
                 },
               ),
             ),
-            const Divider(
-              indent: 0,
-              endIndent: 0,
-              height: 0,
-            ),
-            Padding(
-              padding: EdgeInsets.all(
-                fieldPadding,
-              ),
-              child: ElevatedButton(
-                onPressed: () => onRandomPressed(
-                  context: context,
-                ),
-                child: Text(
-                  l10n.randomizeButtonString,
-                ),
-              ),
-            ),
           ],
+        ),
+      ),
+      bottomSheet: BottomAppBar(
+        color: theme.scaffoldBackgroundColor,
+        padding: EdgeInsets.all(
+          fieldPadding,
+        ),
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () => onRandomPressed(
+              context: context,
+            ),
+            child: Text(
+              l10n.randomizeButtonString,
+            ),
+          ),
         ),
       ),
     );

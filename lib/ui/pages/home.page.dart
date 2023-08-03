@@ -7,70 +7,15 @@ import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart'
 import 'package:clothes_randomizer_app/models/use.model.dart';
 import 'package:clothes_randomizer_app/ui/widgets/app_bar_popup_menu.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({
-    super.key,
-  });
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
+class HomePage extends StatelessWidget {
   final GlobalKey _appBarKey = GlobalKey();
 
-  static final appBarElevationNotifier = ValueNotifier<double>(
-    0,
-  );
-
-  getAppBarElevation() => Future.delayed(
-        const Duration(
-          microseconds: 0,
-        ),
-      ).then(
-        (
-          value,
-        ) {
-          final BuildContext? context = _appBarKey.currentContext;
-
-          if (context != null) {
-            final statefulElement = context as StatefulElement;
-
-            SingleChildRenderObjectElement? singleChildRenderObjectElement;
-
-            statefulElement.visitChildElements(
-              (
-                element,
-              ) {
-                singleChildRenderObjectElement =
-                    element as SingleChildRenderObjectElement;
-              },
-            );
-
-            final semantics =
-                singleChildRenderObjectElement!.widget as Semantics;
-
-            final annotatedRegion = semantics.child as AnnotatedRegion;
-
-            final material = annotatedRegion.child as Material;
-
-            appBarElevationNotifier.value = material.elevation;
-          } else {
-            getAppBarElevation();
-          }
-        },
-      );
-
-  @override
-  void initState() {
-    super.initState();
-
-    getAppBarElevation();
-  }
+  HomePage({
+    super.key,
+  });
 
   @override
   Widget build(
@@ -113,100 +58,106 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ValueListenableBuilder<double>(
-              valueListenable: appBarElevationNotifier,
+            FutureBuilder<double>(
+              future: getAppBarElevation(
+                delay: 0,
+              ),
               builder: (
                 context,
-                value,
-                child,
-              ) =>
-                  Material(
-                elevation: value,
-                child: child,
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(
-                  fieldPadding,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      l10n.selectTypeString,
-                    ),
-                    ListTile(
-                      title: DropdownButton<PieceOfClothingTypeModel>(
-                        value: dataBloc.pieceOfClothingTypeSelected,
-                        icon: const Icon(
-                          Icons.arrow_drop_down,
-                        ),
-                        isExpanded: true,
-                        onChanged: (
-                          value,
-                        ) =>
-                            onPieceOfClothingTypeChanged(
-                          context: context,
-                          value: value,
-                        ),
-                        items: dataBloc.pieceOfClothingTypeList
-                            .map(
-                              (
-                                mPieceOfClothingType,
-                              ) =>
-                                  DropdownMenuItem<PieceOfClothingTypeModel>(
-                                value: mPieceOfClothingType,
-                                child: Text(
-                                  mPieceOfClothingType.name,
-                                ),
+                snapshot,
+              ) {
+                if (snapshot.hasData && (snapshot.data != null)) {
+                  return Material(
+                    elevation: snapshot.data!,
+                    child: Padding(
+                      padding: EdgeInsets.all(
+                        fieldPadding,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            l10n.selectTypeString,
+                          ),
+                          ListTile(
+                            title: DropdownButton<PieceOfClothingTypeModel>(
+                              value: dataBloc.pieceOfClothingTypeSelected,
+                              icon: const Icon(
+                                Icons.arrow_drop_down,
                               ),
-                            )
-                            .toList(),
+                              isExpanded: true,
+                              onChanged: (
+                                value,
+                              ) =>
+                                  onPieceOfClothingTypeChanged(
+                                context: context,
+                                value: value,
+                              ),
+                              items: dataBloc.pieceOfClothingTypeList
+                                  .map(
+                                    (
+                                      mPieceOfClothingType,
+                                    ) =>
+                                        DropdownMenuItem<
+                                            PieceOfClothingTypeModel>(
+                                      value: mPieceOfClothingType,
+                                      child: Text(
+                                        mPieceOfClothingType.name,
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ),
+                          SizedBox.square(
+                            dimension: fieldPadding,
+                          ),
+                          Text(
+                            l10n.selectLocationString,
+                          ),
+                          ListTile(
+                            title: DropdownButton<LocalModel>(
+                              value: dataBloc.localSelected,
+                              icon: const Icon(
+                                Icons.arrow_drop_down,
+                              ),
+                              isExpanded: true,
+                              onChanged: (
+                                value,
+                              ) =>
+                                  onLocalChanged(
+                                context: context,
+                                value: value,
+                              ),
+                              items: dataBloc.localList
+                                  .map(
+                                    (
+                                      mLocal,
+                                    ) =>
+                                        DropdownMenuItem<LocalModel>(
+                                      value: mLocal,
+                                      child: Text(
+                                        mLocal.name,
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ),
+                          SizedBox.square(
+                            dimension: fieldPadding,
+                          ),
+                          Text(
+                            l10n.usesString,
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox.square(
-                      dimension: fieldPadding,
-                    ),
-                    Text(
-                      l10n.selectLocationString,
-                    ),
-                    ListTile(
-                      title: DropdownButton<LocalModel>(
-                        value: dataBloc.localSelected,
-                        icon: const Icon(
-                          Icons.arrow_drop_down,
-                        ),
-                        isExpanded: true,
-                        onChanged: (
-                          value,
-                        ) =>
-                            onLocalChanged(
-                          context: context,
-                          value: value,
-                        ),
-                        items: dataBloc.localList
-                            .map(
-                              (
-                                mLocal,
-                              ) =>
-                                  DropdownMenuItem<LocalModel>(
-                                value: mLocal,
-                                child: Text(
-                                  mLocal.name,
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ),
-                    SizedBox.square(
-                      dimension: fieldPadding,
-                    ),
-                    Text(
-                      l10n.usesString,
-                    ),
-                  ],
-                ),
-              ),
+                  );
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              },
             ),
             Expanded(
               child: ListView.builder(
@@ -301,6 +252,45 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  Future<double> getAppBarElevation({
+    required int delay,
+  }) async {
+    await Future.delayed(
+      Duration(
+        microseconds: delay,
+      ),
+    );
+
+    final BuildContext? context = _appBarKey.currentContext;
+
+    if (context != null) {
+      final statefulElement = context as StatefulElement;
+
+      SingleChildRenderObjectElement? singleChildRenderObjectElement;
+
+      statefulElement.visitChildElements(
+        (
+          element,
+        ) {
+          singleChildRenderObjectElement =
+              element as SingleChildRenderObjectElement;
+        },
+      );
+
+      final semantics = singleChildRenderObjectElement!.widget as Semantics;
+
+      final annotatedRegion = semantics.child as AnnotatedRegion;
+
+      final material = annotatedRegion.child as Material;
+
+      return material.elevation;
+    } else {
+      return await getAppBarElevation(
+        delay: delay + 1,
+      );
+    }
   }
 
   onDialogOkPressed({

@@ -25,7 +25,7 @@ class TabsPage extends StatelessWidget {
     if (loadingBloc.isLoading) {
       return const LoadingPage();
     } else if (userBloc.token != null) {
-      return const HomePage();
+      return HomePage();
     } else {
       return const SignInPage();
     }

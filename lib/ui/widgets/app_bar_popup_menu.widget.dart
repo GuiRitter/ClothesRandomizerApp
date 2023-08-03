@@ -85,6 +85,7 @@ class AppBarPopupMenuWidget extends StatelessWidget {
         );
         dataBloc.revalidateData(
           refreshBaseData: true,
+          refreshUseList: true,
         );
         break;
       case AppBarPopupMenuEnum.theme:

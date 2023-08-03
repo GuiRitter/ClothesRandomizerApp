@@ -12,7 +12,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // flutter build web --base-href "/clothes_randomizer/"
-// flutter build web --base-href "/clothes_randomizer/" --web-renderer html --release
 
 void main() {
   runApp(

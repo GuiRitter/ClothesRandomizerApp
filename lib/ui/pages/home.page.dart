@@ -2,10 +2,12 @@ import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
 import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/constants/sign.enum.dart';
 import 'package:clothes_randomizer_app/dialogs.dart';
+import 'package:clothes_randomizer_app/main.dart';
 import 'package:clothes_randomizer_app/models/local.model.dart';
 import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart';
 import 'package:clothes_randomizer_app/models/use.model.dart';
 import 'package:clothes_randomizer_app/ui/widgets/app_bar_popup_menu.widget.dart';
+import 'package:clothes_randomizer_app/utils/date_time.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -168,13 +170,29 @@ class HomePage extends StatelessWidget {
                 ) {
                   final use = dataBloc.useList[index];
 
+                  final subtitle = [
+                    l10n.usesPlural(
+                      use.counter,
+                    ),
+                  ];
+
+                  if (use.lastDateTime != null) {
+                    subtitle.add(
+                      l10n.lastUse(
+                        formmatLastDateTime(
+                          dateTime: use.lastDateTime!,
+                        ),
+                      ),
+                    );
+                  }
+
                   return ListTile(
                     title: Text(
                       use.pieceOfClothing!.name,
                     ),
                     subtitle: Text(
-                      l10n.usesPlural(
-                        use.counter,
+                      subtitle.join(
+                        " ",
                       ),
                     ),
                     trailing: PopupMenuButton<SignEnum?>(
@@ -296,19 +314,25 @@ class HomePage extends StatelessWidget {
   onDialogOkPressed({
     required BuildContext context,
     required SignEnum sign,
-  }) {
+  }) async {
     final dataBloc = Provider.of<DataBloc>(
       context,
       listen: false,
     );
 
-    dataBloc.updateUse(
-      sign: sign,
-    );
-
     onDialogCancelPressed(
       context: context,
     );
+
+    final result = await dataBloc.updateUse(
+      sign: sign,
+    );
+
+    if (result.status == ResultStatus.error) {
+      showSnackBar(
+        message: result.message,
+      );
+    }
   }
 
   onLocalChanged({

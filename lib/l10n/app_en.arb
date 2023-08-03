@@ -22,6 +22,7 @@
   "deleteTypeString": "Remove this clothing type: ",
   "invalidPassword": "Invalid password.",
   "invalidUserID": "Invalid user ID.",
+  "lastUse": "Last used: {lastDateTime}",
   "lightTheme": "☀ Light",
   "loading": "Loading",
   "mainClothingString": "Manage clothing items",
@@ -45,6 +46,6 @@
   "useAddString": "Add use to this clothing item: ",
   "useRemoveString": "Remove use from this clothing item: ",
   "userID": "User ID",
-  "usesPlural": "{count, plural, =0{0 uses} =1{1 use} other{{count} uses}}",
+  "usesPlural": "{count, plural, =0{0 uses.} =1{1 use.} other{{count} uses.}}",
   "usesString": "Uses:"
 }

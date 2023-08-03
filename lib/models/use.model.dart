@@ -8,9 +8,12 @@ class UseModel extends TemplateModel implements Comparable<UseModel> {
   final String pieceOfClothingId;
   PieceOfClothingModel? pieceOfClothing;
 
+  final DateTime? lastDateTime;
+
   UseModel({
     required this.pieceOfClothingId,
     required this.counter,
+    required this.lastDateTime,
   });
 
   factory UseModel.fromJson(
@@ -19,14 +22,12 @@ class UseModel extends TemplateModel implements Comparable<UseModel> {
       UseModel(
         pieceOfClothingId: json["id"],
         counter: json["counter"] ?? 0,
-      );
-
-  static List<UseModel> fromList(
-    List<dynamic> query,
-  ) =>
-      TemplateModel.fromList(
-        query,
-        UseModel.fromJson,
+        lastDateTime: ((json["last_date_time"] != null) &&
+                (json["last_date_time"] as String).isNotEmpty)
+            ? DateTime.parse(
+                json["last_date_time"],
+              ).toLocal()
+            : null,
       );
 
   @override
@@ -36,5 +37,13 @@ class UseModel extends TemplateModel implements Comparable<UseModel> {
       StringComparator.compare(
         alpha: pieceOfClothing!.name,
         bravo: other.pieceOfClothing!.name,
+      );
+
+  static List<UseModel> fromList(
+    List<dynamic> query,
+  ) =>
+      TemplateModel.fromList(
+        query,
+        UseModel.fromJson,
       );
 }

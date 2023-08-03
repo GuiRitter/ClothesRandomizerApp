@@ -250,6 +250,7 @@ class DataBloc extends ChangeNotifier {
       data: UseUpdateModel(
         pieceOfClothing: _useSelected!.pieceOfClothing!.id,
         local: _localSelected!.id,
+        newLastDateTime: DateTime.now(),
       ).toJson(),
       cancelToken: cancelToken,
     );

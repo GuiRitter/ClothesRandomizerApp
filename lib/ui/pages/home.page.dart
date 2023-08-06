@@ -252,7 +252,7 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      bottomSheet: BottomAppBar(
+      bottomNavigationBar: BottomAppBar(
         color: theme.scaffoldBackgroundColor,
         padding: EdgeInsets.all(
           fieldPadding,

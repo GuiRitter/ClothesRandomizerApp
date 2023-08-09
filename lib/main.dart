@@ -105,6 +105,13 @@ class MyApp extends StatelessWidget {
       colorScheme: ColorScheme.fromSeed(
         seedColor: Colors.black,
       ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          textStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
 
     final themeDarkTemplate = ThemeData.dark();

@@ -1,4 +1,5 @@
 import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
+import 'package:clothes_randomizer_app/constants/mouse_region_crossing.enum.dart';
 import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/constants/use_popup_menu.enum.dart';
 import 'package:clothes_randomizer_app/dialogs.dart';
@@ -176,7 +177,7 @@ class UseWidget extends StatefulWidget {
 }
 
 class _UseWidgetState extends State<UseWidget> {
-  bool isHovering = false;
+  MouseRegionCrossingEnum mouseRegionCrossing = MouseRegionCrossingEnum.exiting;
 
   @override
   Widget build(
@@ -208,79 +209,119 @@ class _UseWidgetState extends State<UseWidget> {
       );
     }
 
-    return ListTile(
-      enabled: !use.isIgnored,
-      title: Text(
-        use.pieceOfClothing!.name,
+    return MouseRegion(
+      onEnter: (
+        event,
+      ) =>
+          onCrossMouseRegion(
+        MouseRegionCrossingEnum.entering,
       ),
-      subtitle: Text(
-        subtitle.join(
-          " ",
-        ),
+      onExit: (
+        event,
+      ) =>
+          onCrossMouseRegion(
+        MouseRegionCrossingEnum.exiting,
       ),
-      trailing: PopupMenuButton<UsePopupMenuEnum?>(
-        onOpened: () => onUsePopupMenuOpened(
-          context: context,
-          use: use,
-        ),
-        onCanceled: () => onUsePopupMenuCanceled(
-          context: context,
-        ),
-        itemBuilder: (
-          context,
-        ) {
-          final List<PopupMenuItem<UsePopupMenuEnum>> optionList = [
-            PopupMenuItem<UsePopupMenuEnum>(
-              value: UsePopupMenuEnum.add,
-              child: Text(
-                l10n.menuAddItem,
+      child: Stack(
+        children: [
+          ListTile(
+            enabled: !use.isIgnored,
+            title: Text(
+              use.pieceOfClothing!.name,
+            ),
+            subtitle: Text(
+              subtitle.join(
+                " ",
               ),
             ),
-          ];
-
-          if (use.counter > 0) {
-            optionList.add(
-              PopupMenuItem<UsePopupMenuEnum>(
-                value: UsePopupMenuEnum.remove,
-                child: Text(
-                  l10n.menuRemoveItem,
-                ),
+            trailing: PopupMenuButton<UsePopupMenuEnum?>(
+              onOpened: () => onUsePopupMenuOpened(
+                context: context,
+                use: use,
               ),
-            );
-          }
+              onCanceled: () => onUsePopupMenuCanceled(
+                context: context,
+              ),
+              itemBuilder: (
+                context,
+              ) {
+                final List<PopupMenuItem<UsePopupMenuEnum>> optionList = [
+                  PopupMenuItem<UsePopupMenuEnum>(
+                    value: UsePopupMenuEnum.add,
+                    child: Text(
+                      l10n.menuAddItem,
+                    ),
+                  ),
+                ];
 
-          optionList.add(
-            PopupMenuItem<UsePopupMenuEnum>(
-              value: use.isIgnored
-                  ? UsePopupMenuEnum.regard
-                  : UsePopupMenuEnum.ignore,
-              child: Text(
-                use.isIgnored ? l10n.menuRegardItem : l10n.menuIgnoreItem,
+                if (use.counter > 0) {
+                  optionList.add(
+                    PopupMenuItem<UsePopupMenuEnum>(
+                      value: UsePopupMenuEnum.remove,
+                      child: Text(
+                        l10n.menuRemoveItem,
+                      ),
+                    ),
+                  );
+                }
+
+                optionList.add(
+                  PopupMenuItem<UsePopupMenuEnum>(
+                    value: use.isIgnored
+                        ? UsePopupMenuEnum.regard
+                        : UsePopupMenuEnum.ignore,
+                    child: Text(
+                      use.isIgnored ? l10n.menuRegardItem : l10n.menuIgnoreItem,
+                    ),
+                  ),
+                );
+
+                optionList.add(
+                  PopupMenuItem<UsePopupMenuEnum>(
+                    value: null,
+                    child: Text(
+                      l10n.cancel,
+                    ),
+                  ),
+                );
+
+                return optionList;
+              },
+              onSelected: (
+                value,
+              ) =>
+                  onUsePopupMenuItemPressed(
+                context: context,
+                value: value,
               ),
             ),
-          );
-
-          optionList.add(
-            PopupMenuItem<UsePopupMenuEnum>(
-              value: null,
-              child: Text(
-                l10n.cancel,
+          ),
+          Positioned(
+            left: 0,
+            bottom: 0,
+            right: 0,
+            top: 0,
+            child: IgnorePointer(
+              child: Container(
+                color: mouseRegionCrossing == MouseRegionCrossingEnum.entering
+                    ? Theme.of(context).highlightColor
+                    : Colors.transparent,
               ),
             ),
-          );
-
-          return optionList;
-        },
-        onSelected: (
-          value,
-        ) =>
-            onUsePopupMenuItemPressed(
-          context: context,
-          value: value,
-        ),
+          ),
+        ],
       ),
     );
   }
+
+  onCrossMouseRegion(
+    MouseRegionCrossingEnum value,
+  ) =>
+      setState(
+        () {
+          mouseRegionCrossing = value;
+        },
+      );
 
   onUsePopupMenuCanceled({
     required BuildContext context,

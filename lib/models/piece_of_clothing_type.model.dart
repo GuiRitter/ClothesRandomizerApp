@@ -1,8 +1,9 @@
 import 'package:clothes_randomizer_app/models/template.model.dart';
+import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:clothes_randomizer_app/utils/string.comparator.dart';
 
 class PieceOfClothingTypeModel extends TemplateModel
-    implements Comparable<PieceOfClothingTypeModel> {
+    implements Comparable<PieceOfClothingTypeModel>, Loggable {
   final String id;
   final String name;
 
@@ -31,6 +32,12 @@ class PieceOfClothingTypeModel extends TemplateModel
     }
     return id == other.id;
   }
+
+  @override
+  Map<String, dynamic> asLog() => <String, dynamic>{
+        "id": id,
+        "name": name,
+      };
 
   @override
   int compareTo(

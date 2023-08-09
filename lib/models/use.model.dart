@@ -1,8 +1,10 @@
 import 'package:clothes_randomizer_app/models/piece_of_clothing.model.dart';
 import 'package:clothes_randomizer_app/models/template.model.dart';
+import 'package:clothes_randomizer_app/utils/date_time.dart';
+import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:clothes_randomizer_app/utils/string.comparator.dart';
 
-class UseModel extends TemplateModel implements Comparable<UseModel> {
+class UseModel extends TemplateModel implements Comparable<UseModel>, Loggable {
   final int counter;
 
   final String pieceOfClothingId;
@@ -29,6 +31,18 @@ class UseModel extends TemplateModel implements Comparable<UseModel> {
               ).toLocal()
             : null,
       );
+
+  @override
+  Map<String, dynamic> asLog() => <String, dynamic>{
+        "pieceOfClothingId": pieceOfClothingId,
+        "pieceOfClothing": getExistsMark(
+          pieceOfClothing,
+        ),
+        "counter": counter,
+        "lastDateTime": getISO8601(
+          dateTime: lastDateTime,
+        ),
+      };
 
   @override
   int compareTo(

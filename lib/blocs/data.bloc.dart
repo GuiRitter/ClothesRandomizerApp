@@ -14,9 +14,12 @@ import 'package:clothes_randomizer_app/models/result.dart';
 import 'package:clothes_randomizer_app/models/type_use.model.dart';
 import 'package:clothes_randomizer_app/models/use.model.dart';
 import 'package:clothes_randomizer_app/models/use_update.model.dart';
+import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+final _log = logger("DataBloc");
 
 class DataBloc extends ChangeNotifier {
   final _api = Settings.api;
@@ -77,9 +80,15 @@ class DataBloc extends ChangeNotifier {
 
   UseModel? get useSelected => _useSelected;
 
-  clearUseSelected() => _useSelected = null;
+  clearUseSelected() {
+    _log("clearUseSelected").print();
+
+    return _useSelected = null;
+  }
 
   Future<Result> drawPieceOfClothing() async {
+    _log("drawPieceOfClothing").print();
+
     if ((_pieceOfClothingTypeSelected == null) || (_localSelected == null)) {
       return Result.warning();
     }
@@ -124,6 +133,13 @@ class DataBloc extends ChangeNotifier {
     LocalModel? newLocal,
     bool refreshUseList = false,
   }) async {
+    _log("revalidateData")
+        .raw("refreshBaseData", refreshBaseData)
+        .map("newPieceOfClothingType", newPieceOfClothingType)
+        .map("newLocal", newLocal)
+        .raw("refreshUseList", refreshUseList)
+        .print();
+
     final loadingBloc = Provider.of<LoadingBloc>(
       Settings.navigatorState.currentContext!,
       listen: false,
@@ -222,12 +238,17 @@ class DataBloc extends ChangeNotifier {
 
   selectUse({
     required UseModel use,
-  }) =>
-      _useSelected = use;
+  }) {
+    _log("selectUse").map("use", use).print();
+
+    return _useSelected = use;
+  }
 
   Future<Result> updateUse({
     required SignEnum sign,
   }) async {
+    _log("updateUse").enum_("sign", sign).print();
+
     if ((_useSelected == null) || (_localSelected == null)) {
       return Result.warning();
     }
@@ -272,6 +293,8 @@ class DataBloc extends ChangeNotifier {
   }
 
   _linkPieceOfClothings() {
+    _log("_linkPieceOfClothings").print();
+
     // forEach removed because of avoid_function_literals_in_foreach_calls
     for (final fPieceOfClothing in _pieceOfClothingList) {
       fPieceOfClothing.pieceOfClothingType =
@@ -285,6 +308,8 @@ class DataBloc extends ChangeNotifier {
   }
 
   _linkTypeUses() {
+    _log("_linkTypeUses").print();
+
     for (final fTypeUse in _typeUseList) {
       fTypeUse.pieceOfClothingType = _pieceOfClothingTypeList.singleWhere(
         (
@@ -303,6 +328,8 @@ class DataBloc extends ChangeNotifier {
   }
 
   _linkUses() {
+    _log("_linkUses").print();
+
     for (final fUse in _useList) {
       fUse.pieceOfClothing = _pieceOfClothingList.singleWhere(
         (
@@ -316,6 +343,8 @@ class DataBloc extends ChangeNotifier {
   _populateBaseData({
     required data,
   }) {
+    _log("_populateBaseData").raw("data", data).print();
+
     _pieceOfClothingTypeList.clear();
     _pieceOfClothingTypeList.addAll(
       PieceOfClothingTypeModel.fromList(
@@ -354,6 +383,8 @@ class DataBloc extends ChangeNotifier {
   _populateUseList({
     required data,
   }) {
+    _log("_populateUseList").raw("data", data).print();
+
     _useList.clear();
     _useList.addAll(
       UseModel.fromList(

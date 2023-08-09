@@ -1,4 +1,6 @@
-class SignInModel {
+import 'package:clothes_randomizer_app/utils/logger.dart';
+
+class SignInModel implements Loggable {
   late String userId;
   late String password;
 
@@ -13,6 +15,12 @@ class SignInModel {
     userId = json["login"];
     password = json["password"];
   }
+
+  @override
+  Map<String, dynamic> asLog() => <String, dynamic>{
+        "userId": userId,
+        "password": hideSecret(password),
+      };
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};

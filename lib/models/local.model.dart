@@ -1,7 +1,9 @@
 import 'package:clothes_randomizer_app/models/template.model.dart';
+import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:clothes_randomizer_app/utils/string.comparator.dart';
 
-class LocalModel extends TemplateModel implements Comparable<LocalModel> {
+class LocalModel extends TemplateModel
+    implements Comparable<LocalModel>, Loggable {
   final String id;
   final String name;
 
@@ -31,6 +33,12 @@ class LocalModel extends TemplateModel implements Comparable<LocalModel> {
     }
     return id == other.id;
   }
+
+  @override
+  Map<String, dynamic> asLog() => <String, dynamic>{
+        "id": id,
+        "name": name,
+      };
 
   @override
   int compareTo(

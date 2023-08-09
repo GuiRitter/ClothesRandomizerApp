@@ -4,10 +4,13 @@ import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
 import 'package:clothes_randomizer_app/models/result.dart';
 import 'package:clothes_randomizer_app/models/sign_in.model.dart';
+import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+final _log = logger("UserBloc");
 
 class UserBloc extends ChangeNotifier {
   String? _token;
@@ -17,6 +20,8 @@ class UserBloc extends ChangeNotifier {
   String? get token => _token;
 
   clearToken() async {
+    _log("clearToken").print();
+
     _token = null;
 
     _api.options.headers.remove(
@@ -33,6 +38,8 @@ class UserBloc extends ChangeNotifier {
   Future<Result> signIn(
     SignInModel signInModel,
   ) async {
+    _log("signIn").map("signInModel", signInModel).print();
+
     var prefs = await SharedPreferences.getInstance();
     prefs.setString(
       Settings.token,
@@ -80,6 +87,11 @@ class UserBloc extends ChangeNotifier {
     String? newToken,
     bool revalidate = false,
   }) async {
+    _log("validateAndSetToken")
+        .secret("newToken", newToken)
+        .raw("revalidate", revalidate)
+        .print();
+
     if (revalidate) {
       newToken = _token;
     } else if (_token == newToken) {

@@ -29,6 +29,8 @@
   "mainLocationString": "Gerenciar locais",
   "mainTypeString": "Gerenciar tipos de roupas",
   "menuAddItem": "Adicionar uso",
+  "menuIgnoreItem": "Ignorar",
+  "menuRegardItem": "Considerar",
   "menuRemoveItem": "Remover uso",
   "ok": "Ok",
   "password": "Senha",

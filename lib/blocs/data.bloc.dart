@@ -5,7 +5,7 @@ import 'package:clothes_randomizer_app/constants/api_url.enum.dart';
 import 'package:clothes_randomizer_app/constants/models.enum.dart';
 import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
-import 'package:clothes_randomizer_app/constants/sign.enum.dart';
+import 'package:clothes_randomizer_app/constants/use_popup_menu.enum.dart';
 import 'package:clothes_randomizer_app/models/candidate.model.dart';
 import 'package:clothes_randomizer_app/models/local.model.dart';
 import 'package:clothes_randomizer_app/models/piece_of_clothing.model.dart';
@@ -92,7 +92,14 @@ class DataBloc extends ChangeNotifier {
     if ((_pieceOfClothingTypeSelected == null) || (_localSelected == null)) {
       return Result.warning();
     }
-    final candidateList = _useList.fold(
+    final candidateList = _useList
+        .where(
+      (
+        wUse,
+      ) =>
+          !wUse.isIgnored,
+    )
+        .fold(
       CandidateModel.empty(),
       (
         previousCandidates,
@@ -112,6 +119,10 @@ class DataBloc extends ChangeNotifier {
         return previousCandidates;
       },
     ).list;
+
+    if (candidateList.isEmpty) {
+      return Result.warning();
+    }
 
     final rng = Provider.of<Random>(
       Settings.navigatorState.currentContext!,
@@ -244,12 +255,27 @@ class DataBloc extends ChangeNotifier {
     return _useSelected = use;
   }
 
-  Future<Result> updateUse({
-    required SignEnum sign,
-  }) async {
-    _log("updateUse").enum_("sign", sign).print();
+  setUseIgnored() {
+    _log("setUseIgnored").map("_useSelected", _useSelected).print();
 
-    if ((_useSelected == null) || (_localSelected == null)) {
+    if (_useSelected == null) {
+      return;
+    }
+
+    _useSelected!.isIgnored = !_useSelected!.isIgnored;
+    _useSelected = null;
+    notifyListeners();
+  }
+
+  Future<Result> updateUse({
+    required UsePopupMenuEnum useAction,
+  }) async {
+    _log("updateUse").enum_("useAction", useAction).print();
+
+    if ((_useSelected == null) ||
+        (_localSelected == null) ||
+        ((useAction != UsePopupMenuEnum.add) &&
+            (useAction != UsePopupMenuEnum.remove))) {
       return Result.warning();
     }
 
@@ -265,9 +291,9 @@ class DataBloc extends ChangeNotifier {
     );
 
     var response = await _api.postResult(
-      (sign == SignEnum.plus)
-          ? ApiUrl.incrementUse.path
-          : ApiUrl.decrementUse.path,
+      (useAction == UsePopupMenuEnum.remove)
+          ? ApiUrl.decrementUse.path
+          : ApiUrl.incrementUse.path,
       data: UseUpdateModel(
         pieceOfClothing: _useSelected!.pieceOfClothing!.id,
         local: _localSelected!.id,

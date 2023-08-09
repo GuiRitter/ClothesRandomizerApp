@@ -113,6 +113,13 @@ class MyApp extends StatelessWidget {
       colorScheme: ColorScheme.fromSeed(
         seedColor: Colors.white,
       ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          textStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       listTileTheme: const ListTileThemeData().copyWith(
         iconColor: themeDarkTemplate.textTheme.bodySmall?.color,
       ),

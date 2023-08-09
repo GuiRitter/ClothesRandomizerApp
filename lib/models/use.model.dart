@@ -12,6 +12,8 @@ class UseModel extends TemplateModel implements Comparable<UseModel>, Loggable {
 
   final DateTime? lastDateTime;
 
+  bool isIgnored = false;
+
   UseModel({
     required this.pieceOfClothingId,
     required this.counter,

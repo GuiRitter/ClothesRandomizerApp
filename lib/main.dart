@@ -5,11 +5,14 @@ import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
 import 'package:clothes_randomizer_app/ui/pages/tabs.page.dart';
+import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+final _log = logger("MyApp");
 
 // flutter build web --base-href "/clothes_randomizer/"
 
@@ -21,14 +24,17 @@ void main() {
 
 void showSnackBar({
   required String? message,
-}) =>
-    Settings.snackState.currentState!.showSnackBar(
-      SnackBar(
-        content: Text(
-          message ?? "",
-        ),
+}) {
+  _log("showSnackBar").raw("message", message).print();
+
+  Settings.snackState.currentState!.showSnackBar(
+    SnackBar(
+      content: Text(
+        message ?? "",
       ),
-    );
+    ),
+  );
+}
 
 String treatDioResponse({
   required dynamic response,
@@ -78,6 +84,10 @@ class MyApp extends StatelessWidget {
         final themeName = prefs.getString(
           Settings.theme,
         );
+
+        _log("build SharedPreferences.getInstance")
+            .raw("theme", themeName)
+            .print();
 
         if (themeName?.isNotEmpty ?? false) {
           final theme = ThemeMode.values.byName(

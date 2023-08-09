@@ -3,9 +3,12 @@ import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/app_bar_popup_menu.enum.dart';
 import 'package:clothes_randomizer_app/dialogs.dart';
 import 'package:clothes_randomizer_app/ui/widgets/theme_option.widget.dart';
+import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+
+final _log = logger("AppBarPopupMenuWidget");
 
 class AppBarPopupMenuWidget extends StatelessWidget {
   final List<PopupMenuItem<AppBarPopupMenuEnum>> Function({
@@ -73,6 +76,8 @@ class AppBarPopupMenuWidget extends StatelessWidget {
     required BuildContext context,
     required AppBarPopupMenuEnum value,
   }) {
+    _log("onHomePopupMenuItemPressed").enum_("value", value).print();
+
     final l10n = AppLocalizations.of(
       context,
     )!;

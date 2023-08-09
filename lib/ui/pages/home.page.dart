@@ -8,9 +8,12 @@ import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart'
 import 'package:clothes_randomizer_app/models/use.model.dart';
 import 'package:clothes_randomizer_app/ui/widgets/app_bar_popup_menu.widget.dart';
 import 'package:clothes_randomizer_app/utils/date_time.dart';
+import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+
+final _log = logger("HomePage");
 
 class HomePage extends StatelessWidget {
   final GlobalKey _appBarKey = GlobalKey();
@@ -275,6 +278,8 @@ class HomePage extends StatelessWidget {
   Future<double> getAppBarElevation({
     required int delay,
   }) async {
+    _log("getAppBarElevation").raw("delay", delay).print();
+
     await Future.delayed(
       Duration(
         microseconds: delay,
@@ -315,6 +320,8 @@ class HomePage extends StatelessWidget {
     required BuildContext context,
     required SignEnum sign,
   }) async {
+    _log("onDialogOkPressed").enum_("sign", sign).print();
+
     final dataBloc = Provider.of<DataBloc>(
       context,
       listen: false,
@@ -339,6 +346,8 @@ class HomePage extends StatelessWidget {
     required BuildContext context,
     required LocalModel? value,
   }) {
+    _log("onLocalChanged").map("value", value).print();
+
     final dataBloc = Provider.of<DataBloc>(
       context,
       listen: false,
@@ -353,6 +362,8 @@ class HomePage extends StatelessWidget {
     required BuildContext context,
     required PieceOfClothingTypeModel? value,
   }) {
+    _log("onPieceOfClothingTypeChanged").map("value", value).print();
+
     final dataBloc = Provider.of<DataBloc>(
       context,
       listen: false,
@@ -366,6 +377,8 @@ class HomePage extends StatelessWidget {
   onRandomPressed({
     required BuildContext context,
   }) async {
+    _log("onRandomPressed").print();
+
     final dataBloc = Provider.of<DataBloc>(
       context,
       listen: false,
@@ -388,6 +401,8 @@ class HomePage extends StatelessWidget {
   onUsePopupMenuCanceled({
     required BuildContext context,
   }) {
+    _log("onUsePopupMenuCanceled").print();
+
     final dataBloc = Provider.of<DataBloc>(
       context,
       listen: false,
@@ -400,6 +415,8 @@ class HomePage extends StatelessWidget {
     required BuildContext context,
     required SignEnum? value,
   }) {
+    _log("onUsePopupMenuItemPressed").enum_("value", value).print();
+
     final dataBloc = Provider.of<DataBloc>(
       context,
       listen: false,
@@ -420,6 +437,7 @@ class HomePage extends StatelessWidget {
     required BuildContext context,
     required UseModel use,
   }) {
+    _log("onUsePopupMenuOpened").map("use", use).print();
     final dataBloc = Provider.of<DataBloc>(
       context,
       listen: false,
@@ -435,6 +453,8 @@ class HomePage extends StatelessWidget {
     required DataBloc dataBloc,
     required SignEnum sign,
   }) async {
+    _log("showConfirmDialog").enum_("sign", sign).print();
+
     final l10n = AppLocalizations.of(
       context,
     )!;

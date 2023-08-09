@@ -2,8 +2,11 @@ import 'dart:io';
 
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
+import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
+
+final _log = logger("TokenInterceptor");
 
 class TokenInterceptor extends InterceptorsWrapper {
   @override
@@ -11,6 +14,8 @@ class TokenInterceptor extends InterceptorsWrapper {
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
+    _log("onError").asString("err", err).print();
+
     final userBloc = Provider.of<UserBloc>(
       Settings.navigatorState.currentContext!,
       listen: false,

@@ -5,11 +5,14 @@ import 'package:clothes_randomizer_app/constants/settings.dart';
 import 'package:clothes_randomizer_app/main.dart';
 import 'package:clothes_randomizer_app/models/sign_in.model.dart';
 import 'package:clothes_randomizer_app/ui/widgets/app_bar_popup_menu.widget.dart';
+import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+final _log = logger("SignInPage");
 
 class SignInPage extends StatefulWidget {
   const SignInPage({
@@ -30,14 +33,6 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(
     BuildContext context,
   ) {
-    final userBloc = Provider.of<UserBloc>(
-      context,
-    );
-
-    final dataBloc = Provider.of<DataBloc>(
-      context,
-    );
-
     var l10n = AppLocalizations.of(
       context,
     )!;
@@ -110,34 +105,7 @@ class _SignInPageState extends State<SignInPage> {
                           0,
                     ),
                     child: ElevatedButton(
-                      onPressed: () async {
-                        if (!(_formKey.currentState?.validate() ?? false)) {
-                          return;
-                        }
-
-                        _formKey.currentState?.save();
-
-                        TextInput.finishAutofillContext();
-
-                        final result = await userBloc.signIn(
-                          SignInModel(
-                            userId: _userId ?? "",
-                            password: _password ?? "",
-                          ),
-                        );
-
-                        if (result.hasMessageNotIn(
-                          status: ResultStatus.success,
-                        )) {
-                          showSnackBar(
-                            message: result.message,
-                          );
-                        } else {
-                          dataBloc.revalidateData(
-                            refreshBaseData: true,
-                          );
-                        }
-                      },
+                      onPressed: onSingInPressed,
                       child: Text(
                         l10n.signIn,
                       ),
@@ -171,6 +139,11 @@ class _SignInPageState extends State<SignInPage> {
         var token = prefs.getString(
           Settings.token,
         );
+
+        _log("initState SharedPreferences.getInstance")
+            .secret("token", token)
+            .print();
+
         if (token?.isNotEmpty ?? false) {
           userBloc
               .validateAndSetToken(
@@ -198,5 +171,44 @@ class _SignInPageState extends State<SignInPage> {
     );
 
     super.initState();
+  }
+
+  onSingInPressed() async {
+    final userBloc = Provider.of<UserBloc>(
+      context,
+    );
+
+    final dataBloc = Provider.of<DataBloc>(
+      context,
+    );
+
+    _log("onSingInPressed").print();
+
+    if (!(_formKey.currentState?.validate() ?? false)) {
+      return;
+    }
+
+    _formKey.currentState?.save();
+
+    TextInput.finishAutofillContext();
+
+    final result = await userBloc.signIn(
+      SignInModel(
+        userId: _userId ?? "",
+        password: _password ?? "",
+      ),
+    );
+
+    if (result.hasMessageNotIn(
+      status: ResultStatus.success,
+    )) {
+      showSnackBar(
+        message: result.message,
+      );
+    } else {
+      dataBloc.revalidateData(
+        refreshBaseData: true,
+      );
+    }
   }
 }

@@ -1,7 +1,10 @@
 import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
+import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+
+final _log = logger("LoadingPage");
 
 class LoadingPage extends StatelessWidget {
   const LoadingPage({
@@ -66,6 +69,8 @@ class LoadingPage extends StatelessWidget {
   onCancelPressed({
     required BuildContext context,
   }) {
+    _log("onCancelPressed").print();
+
     final loadingBloc = Provider.of<LoadingBloc>(
       context,
       listen: false,

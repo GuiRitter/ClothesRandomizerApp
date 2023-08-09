@@ -40,19 +40,19 @@ class Log {
     required this.methodName,
   });
 
-  // Log asString(
-  //   String key,
-  //   dynamic value,
-  // ) {
-  //   argumentMap[key] = value?.toString();
-  //   return this;
-  // }
+  Log asString(
+    String key,
+    dynamic value,
+  ) {
+    argumentMap[key] = value?.toString();
+    return this;
+  }
 
   Log enum_(
     String key,
-    Enum value,
+    Enum? value,
   ) {
-    argumentMap[key] = value.name;
+    argumentMap[key] = value?.name;
     return this;
   }
 

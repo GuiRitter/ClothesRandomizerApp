@@ -1,7 +1,10 @@
 import 'package:clothes_randomizer_app/constants/settings.dart';
 import 'package:clothes_randomizer_app/main.dart';
+import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+final _log = logger("ThemeOptionWidget");
 
 class ThemeOptionWidget extends StatelessWidget {
   final ThemeMode themeMode;
@@ -37,6 +40,8 @@ class ThemeOptionWidget extends StatelessWidget {
     required BuildContext context,
     required ThemeMode themeMode,
   }) {
+    _log("onThemeTapped").enum_("themeMode", themeMode).print();
+
     MyApp.themeNotifier.value = themeMode;
 
     SharedPreferences.getInstance().then(

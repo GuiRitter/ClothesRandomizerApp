@@ -268,24 +268,24 @@ class HomePage extends StatelessWidget {
                 },
               ),
             ),
+            BottomAppBar(
+              color: theme.scaffoldBackgroundColor,
+              padding: EdgeInsets.all(
+                fieldPadding,
+              ),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => onRandomPressed(
+                    context: context,
+                  ),
+                  child: Text(
+                    l10n.randomizeButtonString,
+                  ),
+                ),
+              ),
+            )
           ],
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: theme.scaffoldBackgroundColor,
-        padding: EdgeInsets.all(
-          fieldPadding,
-        ),
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () => onRandomPressed(
-              context: context,
-            ),
-            child: Text(
-              l10n.randomizeButtonString,
-            ),
-          ),
         ),
       ),
     );

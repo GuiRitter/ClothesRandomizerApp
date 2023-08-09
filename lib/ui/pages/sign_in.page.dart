@@ -176,10 +176,12 @@ class _SignInPageState extends State<SignInPage> {
   onSingInPressed() async {
     final userBloc = Provider.of<UserBloc>(
       context,
+      listen: false,
     );
 
     final dataBloc = Provider.of<DataBloc>(
       context,
+      listen: false,
     );
 
     _log("onSingInPressed").print();

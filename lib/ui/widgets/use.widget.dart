@@ -199,11 +199,16 @@ class _UseWidgetState extends State<UseWidget> {
       ),
     ];
 
+    /// `languageCode` and `toLanguageTag` are returning the same at the moment,
+    /// while `countryCode` and `scriptCode` are returning `null`.
+    final locale = Localizations.localeOf(context).toString();
+
     if (use.lastDateTime != null) {
       subtitle.add(
         l10n.lastUse(
           formmatLastDateTime(
             dateTime: use.lastDateTime!,
+            locale: locale,
           ),
         ),
       );

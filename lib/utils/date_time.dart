@@ -3,9 +3,11 @@ import 'package:intl/intl.dart';
 
 String formmatLastDateTime({
   required DateTime dateTime,
+  required String locale,
 }) =>
     DateFormat(
       lastDateTimeFormat,
+      locale,
     ).format(
       dateTime,
     );

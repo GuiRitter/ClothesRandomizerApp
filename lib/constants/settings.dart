@@ -1,8 +1,8 @@
-import 'package:clothes_randomizer_app/services/custom_dio.dart';
+import 'package:clothes_randomizer_app/services/dio/dio_for_any.interface.dart';
 import 'package:flutter/material.dart';
 
 class Settings {
-  static CustomDio api = CustomDio();
+  static DioForAny api = DioForAny();
 
   static String apiUrl =
       "https://guilherme-alan-ritter.net/clothes_randomizer/api/";

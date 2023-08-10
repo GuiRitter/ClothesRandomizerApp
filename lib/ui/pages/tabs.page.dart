@@ -1,5 +1,7 @@
+import 'package:clothes_randomizer_app/blocs/entity.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
+import 'package:clothes_randomizer_app/ui/pages/entity_read.page.dart';
 import 'package:clothes_randomizer_app/ui/pages/home.page.dart';
 import 'package:clothes_randomizer_app/ui/pages/loading.page.dart';
 import 'package:clothes_randomizer_app/ui/pages/sign_in.page.dart';
@@ -21,10 +23,17 @@ class TabsPage extends StatelessWidget {
     final userBloc = Provider.of<UserBloc>(
       context,
     );
+    final entityBloc = Provider.of<EntityBloc>(
+      context,
+    );
 
     if (loadingBloc.isLoading) {
       return const LoadingPage();
     } else if (userBloc.token != null) {
+      if (entityBloc.entity != null) {
+        return const EntityReadPage();
+      }
+
       return HomePage();
     } else {
       return const SignInPage();

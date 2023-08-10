@@ -1,6 +1,8 @@
 import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
+import 'package:clothes_randomizer_app/blocs/entity.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/app_bar_popup_menu.enum.dart';
+import 'package:clothes_randomizer_app/constants/entity.enum.dart';
 import 'package:clothes_randomizer_app/dialogs.dart';
 import 'package:clothes_randomizer_app/ui/widgets/theme_option.widget.dart';
 import 'package:clothes_randomizer_app/utils/logger.dart';
@@ -21,6 +23,15 @@ class AppBarPopupMenuWidget extends StatelessWidget {
         }) =>
             [
           _buildItemReload(
+            l10n: l10n,
+          ),
+          _buildItemLocal(
+            l10n: l10n,
+          ),
+          _buildItemPieceOfClothingType(
+            l10n: l10n,
+          ),
+          _buildItemPieceOfClothing(
             l10n: l10n,
           ),
           _buildItemTheme(
@@ -93,6 +104,33 @@ class AppBarPopupMenuWidget extends StatelessWidget {
           refreshUseList: true,
         );
         break;
+      case AppBarPopupMenuEnum.local:
+        final entityBloc = Provider.of<EntityBloc>(
+          context,
+          listen: false,
+        );
+        entityBloc.manageEntity(
+          entityModel: EntityModel.local,
+        );
+        break;
+      case AppBarPopupMenuEnum.pieceOfClothingType:
+        final entityBloc = Provider.of<EntityBloc>(
+          context,
+          listen: false,
+        );
+        entityBloc.manageEntity(
+          entityModel: EntityModel.pieceOfClothingType,
+        );
+        break;
+      case AppBarPopupMenuEnum.pieceOfClothing:
+        final entityBloc = Provider.of<EntityBloc>(
+          context,
+          listen: false,
+        );
+        entityBloc.manageEntity(
+          entityModel: EntityModel.pieceOfClothing,
+        );
+        break;
       case AppBarPopupMenuEnum.theme:
         showDialog(
           context: context,
@@ -157,6 +195,30 @@ class AppBarPopupMenuWidget extends StatelessWidget {
         child: Text(
           text,
         ),
+      );
+
+  static PopupMenuItem<AppBarPopupMenuEnum> _buildItemLocal({
+    required AppLocalizations l10n,
+  }) =>
+      _buildItem(
+        enumValue: AppBarPopupMenuEnum.local,
+        text: l10n.mainLocationString,
+      );
+
+  static PopupMenuItem<AppBarPopupMenuEnum> _buildItemPieceOfClothing({
+    required AppLocalizations l10n,
+  }) =>
+      _buildItem(
+        enumValue: AppBarPopupMenuEnum.pieceOfClothing,
+        text: l10n.mainClothingString,
+      );
+
+  static PopupMenuItem<AppBarPopupMenuEnum> _buildItemPieceOfClothingType({
+    required AppLocalizations l10n,
+  }) =>
+      _buildItem(
+        enumValue: AppBarPopupMenuEnum.pieceOfClothingType,
+        text: l10n.mainTypeString,
       );
 
   static PopupMenuItem<AppBarPopupMenuEnum> _buildItemReload({

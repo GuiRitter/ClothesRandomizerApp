@@ -5,6 +5,15 @@ enum ApiUrl {
   chunk(
     path: "chunk",
   ),
+  localList(
+    path: "local/list",
+  ),
+  pieceOfClothingTypeList(
+    path: "type/list",
+  ),
+  pieceOfClothingList(
+    path: "piece_of_clothing/list",
+  ),
   signIn(
     path: "user/sign_in",
   ),

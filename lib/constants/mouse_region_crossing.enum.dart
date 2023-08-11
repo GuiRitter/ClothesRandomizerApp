@@ -1,4 +1,0 @@
-enum MouseRegionCrossingEnum {
-  entering,
-  exiting,
-}

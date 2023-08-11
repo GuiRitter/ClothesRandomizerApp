@@ -21,6 +21,7 @@
   "deleteLocationString": "Remove this location: ",
   "deleteTypeString": "Remove this clothing type: ",
   "entitiesName": "{entity, select, local{Locations} piece_of_clothing_type{Clothing types} piece_of_clothing{Clothing items} other{{entity}}}",
+  "entityHeader": "{entity, select, local__name{Name} piece_of_clothing_type__name{Name} piece_of_clothing__piece_of_clothing_type{Clothing type} piece_of_clothing__name{Name} other{{entity}}}",
   "entityName": "{entity, select, local{Location} piece_of_clothing_type{Clothing type} piece_of_clothing{Clothing item} other{{entity}}}",
   "invalidPassword": "Invalid password.",
   "invalidUserID": "Invalid user ID.",

@@ -3,6 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
+Widget _boldText({
+  required String label,
+}) =>
+    Text(
+      style: const TextStyle(
+        fontWeight: FontWeight.bold,
+      ),
+      label,
+    );
+
 class EntityReadPage extends StatelessWidget {
   const EntityReadPage({
     super.key,
@@ -19,6 +29,14 @@ class EntityReadPage extends StatelessWidget {
       context,
     );
 
+    final theme = Theme.of(
+      context,
+    );
+
+    final borderSide = BorderSide(
+      color: theme.dividerColor,
+    );
+
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
@@ -31,9 +49,7 @@ class EntityReadPage extends StatelessWidget {
           children: [
             Text(
               l10n.title,
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall,
+              style: theme.textTheme.bodySmall,
             ),
             Text(
               l10n.entitiesName(
@@ -42,32 +58,87 @@ class EntityReadPage extends StatelessWidget {
             ),
           ],
         ),
+        actions: [
+          TextButton(
+            // onPressed: null,
+            onPressed: () {},
+            child: const Icon(
+              Icons.add,
+            ),
+          )
+        ],
       ),
-      body: SingleChildScrollView(
-        child: Table(
-          columnWidths: {
-            for (var element in entityBloc.entity!.columnDisplayList.indexed)
-              element.$1: const IntrinsicColumnWidth()
-          },
-          children: entityBloc.entityList
-              .map(
-                (
-                  mEntity,
-                ) =>
-                    TableRow(
-                  children: entityBloc.entity!.columnDisplayList
-                      .map(
-                        (
-                          mColumn,
-                        ) =>
-                            Text(
-                          mEntity[mColumn],
-                        ),
-                      )
-                      .toList(),
+      body: Center(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: SingleChildScrollView(
+            child: DataTable(
+              border: TableBorder(
+                  bottom: borderSide,
+                  left: borderSide,
+                  right: borderSide,
+                  top: borderSide),
+              columns: [
+                ...entityBloc.entity!.columnDisplayList.map(
+                  (
+                    mColumn,
+                  ) =>
+                      DataColumn(
+                    label: _boldText(
+                      label: l10n.entityHeader(
+                        "${entityBloc.entity!.entityName}__$mColumn",
+                      ),
+                    ),
+                  ),
                 ),
-              )
-              .toList(),
+                const DataColumn(
+                  label: SizedBox.shrink(),
+                ),
+                const DataColumn(
+                  label: SizedBox.shrink(),
+                ),
+              ],
+              rows: entityBloc.entityList
+                  .map(
+                    (
+                      mEntity,
+                    ) =>
+                        DataRow(
+                      // This is used in lieu of `dataRowColor` because it's not working
+                      onLongPress: () {},
+                      cells: [
+                        ...entityBloc.entity!.columnDisplayList.map(
+                          (
+                            mColumn,
+                          ) =>
+                              DataCell(
+                            Text(
+                              mEntity[mColumn],
+                            ),
+                          ),
+                        ),
+                        const DataCell(
+                          ElevatedButton(
+                            onPressed: null,
+                            child: Icon(
+                              Icons.edit,
+                            ),
+                          ),
+                        ),
+                        const DataCell(
+                          ElevatedButton(
+                            onPressed: null,
+                            child: Icon(
+                              Icons.delete,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
         ),
       ),
     );

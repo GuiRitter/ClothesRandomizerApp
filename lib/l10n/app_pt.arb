@@ -21,6 +21,7 @@
   "deleteLocationString": "Remover este local: ",
   "deleteTypeString": "Remover este tipo de roupa: ",
   "entitiesName": "{entity, select, local{Locais} piece_of_clothing_type{Tipos de roupa} piece_of_clothing{Roupas} other{{entity}}}",
+  "entityHeader": "{entity, select, local__name{Nome} piece_of_clothing_type__name{Nome} piece_of_clothing__piece_of_clothing_type{Tipo de roupa} piece_of_clothing__name{Nome} other{{entity}}}",
   "entityName": "{entity, select, local{Local} piece_of_clothing_type{Tipo de roupa} piece_of_clothing{Roupa} other{{entity}}}",
   "invalidPassword": "Senha inválida.",
   "invalidUserID": "ID de usuário inválida.",

@@ -1,9 +1,11 @@
 import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/app_bar_popup_menu.enum.dart';
+import 'package:clothes_randomizer_app/constants/theme.enum.dart';
 import 'package:clothes_randomizer_app/dialogs.dart';
 import 'package:clothes_randomizer_app/ui/widgets/theme_option.widget.dart';
 import 'package:clothes_randomizer_app/utils/logger.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -98,40 +100,62 @@ class AppBarPopupMenuWidget extends StatelessWidget {
           context: context,
           builder: (
             context,
-          ) =>
-              AlertDialog(
-            title: Text(
-              l10n.chooseTheme,
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
+          ) {
+            final optionList = [
+              ThemeOptionWidget(
+                themeMode: ThemeEnum.dark,
+                title: l10n.darkTheme,
+              ),
+              ThemeOptionWidget(
+                themeMode: ThemeEnum.light,
+                title: l10n.lightTheme,
+              ),
+            ];
+
+            if (kDebugMode) {
+              optionList.add(
                 ThemeOptionWidget(
-                  themeMode: ThemeMode.dark,
-                  title: l10n.darkTheme,
+                  themeMode: ThemeEnum.testDark,
+                  title: l10n.testDarkTheme,
                 ),
+              );
+
+              optionList.add(
                 ThemeOptionWidget(
-                  themeMode: ThemeMode.light,
-                  title: l10n.lightTheme,
+                  themeMode: ThemeEnum.testLight,
+                  title: l10n.testLightTheme,
                 ),
-                ThemeOptionWidget(
-                  themeMode: ThemeMode.system,
-                  title: l10n.systemTheme,
+              );
+            }
+
+            optionList.add(
+              ThemeOptionWidget(
+                themeMode: ThemeEnum.system,
+                title: l10n.systemTheme,
+              ),
+            );
+
+            return AlertDialog(
+              title: Text(
+                l10n.chooseTheme,
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: optionList,
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => onDialogCancelPressed(
+                    context: context,
+                  ),
+                  child: Text(
+                    l10n.cancel,
+                    textAlign: TextAlign.end,
+                  ),
                 ),
               ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => onDialogCancelPressed(
-                  context: context,
-                ),
-                child: Text(
-                  l10n.cancel,
-                  textAlign: TextAlign.end,
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         );
         break;
       case AppBarPopupMenuEnum.signOut:

@@ -1,4 +1,5 @@
 import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
+import 'package:clothes_randomizer_app/ui/widgets/app_bar_custom.widget.dart';
 import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -25,24 +26,9 @@ class LoadingPage extends StatelessWidget {
         0.0;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              AppLocalizations.of(
-                context,
-              )!
-                  .title,
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall,
-            ),
-            Text(
-              l10n.loading,
-            ),
-          ],
-        ),
+      appBar: appBarCustom(
+        context: context,
+        subtitle: l10n.loading,
       ),
       body: Center(
         child: Wrap(

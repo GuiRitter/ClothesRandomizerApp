@@ -5,9 +5,15 @@ import 'package:clothes_randomizer_app/blocs/entity.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
+import 'package:clothes_randomizer_app/constants/theme.enum.dart';
+import 'package:clothes_randomizer_app/themes/dark.theme.dart';
+import 'package:clothes_randomizer_app/themes/light.theme.dart';
+import 'package:clothes_randomizer_app/themes/testDark.theme.dart';
+import 'package:clothes_randomizer_app/themes/testlight.theme.dart';
 import 'package:clothes_randomizer_app/ui/pages/tabs.page.dart';
 import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -66,8 +72,8 @@ String treatException({
 }
 
 class MyApp extends StatelessWidget {
-  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(
-    ThemeMode.system,
+  static final ValueNotifier<ThemeEnum> themeNotifier = ValueNotifier(
+    ThemeEnum.system,
   );
 
   const MyApp({
@@ -91,46 +97,38 @@ class MyApp extends StatelessWidget {
             .print();
 
         if (themeName?.isNotEmpty ?? false) {
-          final theme = ThemeMode.values.byName(
+          var theme = ThemeEnum.values.byName(
             themeName!,
           );
+
+          if ((!kDebugMode) && theme.isTest) {
+            theme = theme.notTest;
+
+            prefs.setString(
+              Settings.theme,
+              theme.name,
+            );
+          }
 
           themeNotifier.value = theme;
         }
       },
     );
 
-    final themeLightTemplate = ThemeData();
-
-    final themeLight = themeLightTemplate.copyWith(
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.black,
-      ),
-      textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          textStyle: const TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+    final testThemeLight = testLight(
+      context: context,
     );
 
-    final themeDarkTemplate = ThemeData.dark();
+    final testThemeDark = testDark(
+      context: context,
+    );
 
-    final themeDark = themeDarkTemplate.copyWith(
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.white,
-      ),
-      textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          textStyle: const TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      listTileTheme: const ListTileThemeData().copyWith(
-        iconColor: themeDarkTemplate.textTheme.bodySmall?.color,
-      ),
+    final themeLight = light(
+      context: context,
+    );
+
+    final themeDark = dark(
+      context: context,
     );
 
     return MultiProvider(
@@ -151,7 +149,7 @@ class MyApp extends StatelessWidget {
           value: Random(),
         ),
       ],
-      child: ValueListenableBuilder<ThemeMode>(
+      child: ValueListenableBuilder<ThemeEnum>(
         valueListenable: themeNotifier,
         builder: (
           _,
@@ -162,9 +160,13 @@ class MyApp extends StatelessWidget {
           title: getTitle(
             context,
           ),
-          theme: themeLight,
-          darkTheme: themeDark,
-          themeMode: themeMode,
+          theme: (kDebugMode && (themeMode == ThemeEnum.testLight))
+              ? testThemeLight
+              : themeLight,
+          darkTheme: (kDebugMode && (themeMode == ThemeEnum.testDark))
+              ? testThemeDark
+              : themeDark,
+          themeMode: themeMode.mode,
           // flutter gen-l10n
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,

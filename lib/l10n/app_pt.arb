@@ -47,6 +47,8 @@
   "signIn": "Autenticar",
   "signOut": "⛔ Sair",
   "systemTheme": "⚙ Sistema",
+  "testDarkTheme": "🤡 🌙 Teste",
+  "testLightTheme": "🤡 ☀ Teste",
   "title": "Aleatorizador de Roupas",
   "useAddString": "Adicionar uso para esta roupa: ",
   "useRemoveString": "Remover uso desta roupa: ",

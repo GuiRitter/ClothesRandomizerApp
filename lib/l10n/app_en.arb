@@ -47,6 +47,8 @@
   "signIn": "Sign in",
   "signOut": "⛔ Sign out",
   "systemTheme": "⚙ System",
+  "testDarkTheme": "🤡 🌙 Test",
+  "testLightTheme": "🤡 ☀ Test",
   "title": "Clothes Randomizer",
   "useAddString": "Add use to this clothing item: ",
   "useRemoveString": "Remove use from this clothing item: ",

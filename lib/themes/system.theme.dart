@@ -20,6 +20,7 @@ ThemeData getTheme({
   required Color divider,
   required Color listTileIcon,
   required Color scaffoldBackground,
+  required Color scrim,
   required Color shadow,
   required Color snackBarBackground,
   required Color snackBarContent,
@@ -36,6 +37,7 @@ ThemeData getTheme({
       primary: primary,
       onPrimary: onPrimary,
       onSurface: onSurface,
+      scrim: scrim,
     ),
     appBarTheme: AppBarTheme(
       color: appBar,

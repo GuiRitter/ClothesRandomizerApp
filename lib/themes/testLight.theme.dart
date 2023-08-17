@@ -19,6 +19,7 @@ ThemeData testLight({
       divider: Colors.pink,
       listTileIcon: Colors.yellow,
       scaffoldBackground: Colors.blue.shade900,
+      scrim: Colors.black54,
       shadow: Colors.red,
       snackBarBackground: Colors.red,
       snackBarContent: Colors.blue,

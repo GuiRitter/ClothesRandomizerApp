@@ -19,6 +19,7 @@ ThemeData dark({
       divider: Colors.grey.shade800,
       listTileIcon: Colors.grey.shade500,
       scaffoldBackground: Colors.black,
+      scrim: Colors.white54,
       shadow: Colors.grey,
       snackBarBackground: Colors.white,
       snackBarContent: Colors.grey.shade700,

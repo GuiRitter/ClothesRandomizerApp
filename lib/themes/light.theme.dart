@@ -21,6 +21,7 @@ ThemeData light({
       divider: Colors.grey.shade400,
       listTileIcon: Colors.grey.shade500,
       scaffoldBackground: Colors.white,
+      scrim: Colors.black54,
       shadow: Theme.of(
         context,
       ).shadowColor,

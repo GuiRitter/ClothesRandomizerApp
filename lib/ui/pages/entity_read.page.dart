@@ -1,7 +1,16 @@
 import 'package:clothes_randomizer_app/blocs/entity.bloc.dart';
+import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
+import 'package:clothes_randomizer_app/dialogs.dart';
+import 'package:clothes_randomizer_app/main.dart';
+import 'package:clothes_randomizer_app/ui/widgets/app_bar_custom.widget.dart';
+import 'package:clothes_randomizer_app/ui/widgets/dialog.widget.dart';
+import 'package:clothes_randomizer_app/utils/entity.extension.dart';
+import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+
+final _log = logger("EntityReadPage");
 
 Widget _boldText({
   required String label,
@@ -25,6 +34,7 @@ class EntityReadPage extends StatelessWidget {
     var l10n = AppLocalizations.of(
       context,
     )!;
+
     final entityBloc = Provider.of<EntityBloc>(
       context,
     );
@@ -38,36 +48,25 @@ class EntityReadPage extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(
-          onPressed: () => onBackPressed(
-            context: context,
-          ),
-        ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              l10n.title,
-              style: theme.textTheme.bodySmall,
+      appBar: appBarCustom(
+          context: context,
+          leading: BackButton(
+            onPressed: () => onBackPressed(
+              context: context,
             ),
-            Text(
-              l10n.entitiesName(
-                entityBloc.entity!.entityName,
+          ),
+          subtitle: l10n.entitiesName(
+            entityBloc.entity!.entityName,
+          ),
+          actions: [
+            const TextButton(
+              onPressed: null,
+              // onPressed: () {},
+              child: Icon(
+                Icons.add,
               ),
             ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            // onPressed: null,
-            onPressed: () {},
-            child: const Icon(
-              Icons.add,
-            ),
-          )
-        ],
-      ),
+          ]),
       body: Center(
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -125,10 +124,13 @@ class EntityReadPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const DataCell(
+                        DataCell(
                           ElevatedButton(
-                            onPressed: null,
-                            child: Icon(
+                            onPressed: () => onDeletePressed(
+                              context: context,
+                              entity: mEntity,
+                            ),
+                            child: const Icon(
                               Icons.delete,
                             ),
                           ),
@@ -147,11 +149,97 @@ class EntityReadPage extends StatelessWidget {
   onBackPressed({
     required BuildContext context,
   }) {
+    _log("onBackPressed").print();
+
     final entityBloc = Provider.of<EntityBloc>(
       context,
       listen: false,
     );
 
     entityBloc.exit();
+  }
+
+  onDeletePressed({
+    required BuildContext context,
+    required Map<String, dynamic> entity,
+  }) async {
+    _log("onDeletePressed").raw("entity", entity).print();
+
+    var l10n = AppLocalizations.of(
+      context,
+    )!;
+
+    final entityBloc = Provider.of<EntityBloc>(
+      context,
+      listen: false,
+    );
+
+    await showDialog(
+      context: context,
+      barrierColor: Theme.of(
+        context,
+      ).colorScheme.scrim,
+      builder: (
+        context,
+      ) {
+        return AlertDialog(
+          content: Text(
+            "${l10n.deleteEntity(
+              entityBloc.entity!.entityName,
+            )}${entityBloc.entity!.getDescription(
+              entity,
+            )}?${entity.hasDependency() ? l10n.deleteEntityDependency(
+                entityBloc.entity!.entityName,
+              ) : ""}",
+          ),
+          actions: [
+            buildTextButton(
+              label: l10n.keep,
+              onPressed: () => onDialogCancelPressed(
+                context: context,
+              ),
+            ),
+            // TODO
+            buildTextButton(
+              label: l10n.remove,
+              onPressed: () => onDialogOkPressed(
+                context: context,
+                entity: entity,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  onDialogOkPressed({
+    required BuildContext context,
+    required Map<String, dynamic> entity,
+  }) async {
+    _log("onDialogOkPressed").raw("entity", entity).print();
+
+    final entityBloc = Provider.of<EntityBloc>(
+      context,
+      listen: false,
+    );
+
+    if (context.mounted) {
+      onDialogCancelPressed(
+        context: context,
+      );
+    }
+
+    final result = await entityBloc.deleteCascade(
+      entity: entity,
+    );
+
+    if (result.hasMessageNotIn(
+      status: ResultStatus.success,
+    )) {
+      showSnackBar(
+        message: result.message,
+      );
+    }
   }
 }

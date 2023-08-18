@@ -1,4 +1,5 @@
 import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
+import 'package:clothes_randomizer_app/constants/crud.enum.dart';
 import 'package:clothes_randomizer_app/constants/entity.enum.dart';
 import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
@@ -18,11 +19,30 @@ class EntityBloc extends ChangeNotifier {
 
   final List<Map<String, dynamic>> _entityList = [];
 
+  StateCRUD _state = StateCRUD.read;
+
   EntityModel? get entity => _entity;
+
+  StateCRUD get state => _state;
 
   List<Map<String, dynamic>> get entityList => List.unmodifiable(
         _entityList,
       );
+
+  writeEntity({
+    required String? id,
+  }) {
+    _entityList.removeWhere(
+      (
+        element,
+      ) =>
+          element[identityColumn] != id,
+    );
+
+    _state = (id?.isEmpty ?? true) ? StateCRUD.create : StateCRUD.update;
+
+    notifyListeners();
+  }
 
   Future<Result> deleteCascade({
     required Map<String, dynamic> entity,
@@ -58,7 +78,7 @@ class EntityBloc extends ChangeNotifier {
       notifyListeners();
     }
 
-    return response;
+    return response.withoutData();
   }
 
   exit() {
@@ -69,12 +89,13 @@ class EntityBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  manageEntity({
+  Future<Result> manageEntity({
     required EntityModel entityModel,
   }) async {
     _log("manageEntity").enum_("entity", _entity).print();
 
     _entity = entityModel;
+    _state = StateCRUD.read;
 
     final loadingBloc = Provider.of<LoadingBloc>(
       Settings.navigatorState.currentContext!,
@@ -96,12 +117,17 @@ class EntityBloc extends ChangeNotifier {
       isNotify: false,
     );
 
-    _populateEntityList(
-      entityModel: _entity!,
-      data: (response.status == ResultStatus.success) ? response.data : [],
-    );
+    if (response.status == ResultStatus.success) {
+      _populateEntityList(
+        entityModel: _entity!,
+        data: response.data,
+      );
+      notifyListeners();
+    } else {
+      exit();
+    }
 
-    notifyListeners();
+    return response.withoutData();
   }
 
   _populateEntityList({

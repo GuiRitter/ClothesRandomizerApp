@@ -16,6 +16,7 @@
   "cancel": "Cancel",
   "chooseTheme": "Choose the app''s theme:",
   "clothingTypeOrLocationNotSelected": "Clothing type and location must be selected to get the uses.",
+  "createEntity": "Register ",
   "darkTheme": "🌙 Dark",
   "deleteClothingString": "Remove this clothing item: ",
   "deleteLocationString": "Remove this location: ",

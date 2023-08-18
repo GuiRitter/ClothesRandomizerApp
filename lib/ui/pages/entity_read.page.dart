@@ -59,10 +59,11 @@ class EntityReadPage extends StatelessWidget {
             entityBloc.entity!.entityName,
           ),
           actions: [
-            const TextButton(
-              onPressed: null,
-              // onPressed: () {},
-              child: Icon(
+            TextButton(
+              onPressed: () => onCreatePressed(
+                context: context,
+              ),
+              child: const Icon(
                 Icons.add,
               ),
             ),
@@ -157,6 +158,19 @@ class EntityReadPage extends StatelessWidget {
     );
 
     entityBloc.exit();
+  }
+
+  onCreatePressed({
+    required BuildContext context,
+  }) {
+    final entityBloc = Provider.of<EntityBloc>(
+      context,
+      listen: false,
+    );
+
+    entityBloc.writeEntity(
+      id: null,
+    );
   }
 
   onDeletePressed({

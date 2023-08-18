@@ -3,8 +3,10 @@ import 'package:clothes_randomizer_app/blocs/entity.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/app_bar_popup_menu.enum.dart';
 import 'package:clothes_randomizer_app/constants/entity.enum.dart';
+import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/constants/theme.enum.dart';
 import 'package:clothes_randomizer_app/dialogs.dart';
+import 'package:clothes_randomizer_app/main.dart';
 import 'package:clothes_randomizer_app/ui/widgets/theme_option.widget.dart';
 import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/foundation.dart';
@@ -85,6 +87,28 @@ class AppBarPopupMenuWidget extends StatelessWidget {
     );
   }
 
+  manageEntity({
+    required BuildContext context,
+    required EntityModel model,
+  }) async {
+    final entityBloc = Provider.of<EntityBloc>(
+      context,
+      listen: false,
+    );
+
+    final result = await entityBloc.manageEntity(
+      entityModel: model,
+    );
+
+    if (result.hasMessageNotIn(
+      status: ResultStatus.success,
+    )) {
+      showSnackBar(
+        message: result.message,
+      );
+    }
+  }
+
   onHomePopupMenuItemPressed({
     required BuildContext context,
     required AppBarPopupMenuEnum value,
@@ -107,30 +131,21 @@ class AppBarPopupMenuWidget extends StatelessWidget {
         );
         break;
       case AppBarPopupMenuEnum.local:
-        final entityBloc = Provider.of<EntityBloc>(
-          context,
-          listen: false,
-        );
-        entityBloc.manageEntity(
-          entityModel: EntityModel.local,
+        manageEntity(
+          context: context,
+          model: EntityModel.local,
         );
         break;
       case AppBarPopupMenuEnum.pieceOfClothingType:
-        final entityBloc = Provider.of<EntityBloc>(
-          context,
-          listen: false,
-        );
-        entityBloc.manageEntity(
-          entityModel: EntityModel.pieceOfClothingType,
+        manageEntity(
+          context: context,
+          model: EntityModel.pieceOfClothingType,
         );
         break;
       case AppBarPopupMenuEnum.pieceOfClothing:
-        final entityBloc = Provider.of<EntityBloc>(
-          context,
-          listen: false,
-        );
-        entityBloc.manageEntity(
-          entityModel: EntityModel.pieceOfClothing,
+        manageEntity(
+          context: context,
+          model: EntityModel.pieceOfClothing,
         );
         break;
       case AppBarPopupMenuEnum.theme:

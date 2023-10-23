@@ -1,6 +1,7 @@
 import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
 import 'package:clothes_randomizer_app/models/local.model.dart';
 import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart';
+import 'package:clothes_randomizer_app/ui/widgets/app_bar_custom.widget.dart';
 import 'package:clothes_randomizer_app/ui/widgets/app_bar_popup_menu.widget.dart';
 import 'package:clothes_randomizer_app/ui/widgets/use.widget.dart';
 import 'package:clothes_randomizer_app/utils/logger.dart';
@@ -8,12 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
+final GlobalKey appBarKey = GlobalKey();
+
 final _log = logger("HomePage");
 
 class HomePage extends StatelessWidget {
-  final GlobalKey _appBarKey = GlobalKey();
-
-  HomePage({
+  const HomePage({
     super.key,
   });
 
@@ -43,11 +44,8 @@ class HomePage extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        key: _appBarKey,
-        title: Text(
-          l10n.title,
-        ),
+      appBar: appBarCustom(
+        context: context,
         actions: [
           AppBarPopupMenuWidget.signedIn(),
         ],
@@ -206,7 +204,7 @@ class HomePage extends StatelessWidget {
       ),
     );
 
-    final BuildContext? context = _appBarKey.currentContext;
+    final BuildContext? context = appBarKey.currentContext;
 
     if (context != null) {
       final statefulElement = context as StatefulElement;

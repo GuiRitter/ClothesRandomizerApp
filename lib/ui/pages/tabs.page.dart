@@ -40,7 +40,7 @@ class TabsPage extends StatelessWidget {
         }[entityBloc.state]!;
       }
 
-      return HomePage();
+      return const HomePage();
     } else {
       return const SignInPage();
     }

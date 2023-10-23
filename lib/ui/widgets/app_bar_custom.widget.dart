@@ -1,3 +1,4 @@
+import 'package:clothes_randomizer_app/ui/pages/home.page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -35,6 +36,7 @@ AppBar appBarCustom({
         );
 
   return AppBar(
+    key: appBarKey,
     leading: leading,
     title: title,
     actions: actions,

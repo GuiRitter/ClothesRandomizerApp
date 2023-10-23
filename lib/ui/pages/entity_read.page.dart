@@ -74,10 +74,11 @@ class EntityReadPage extends StatelessWidget {
           child: SingleChildScrollView(
             child: DataTable(
               border: TableBorder(
-                  bottom: borderSide,
-                  left: borderSide,
-                  right: borderSide,
-                  top: borderSide),
+                bottom: borderSide,
+                left: borderSide,
+                right: borderSide,
+                top: borderSide,
+              ),
               columns: [
                 ...entityBloc.entity!.columnDisplayList.map(
                   (

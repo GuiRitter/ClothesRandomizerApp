@@ -89,6 +89,9 @@ Future<void> showConfirmDialog(
   )!;
 
   await showDialog(
+    barrierColor: Theme.of(
+      context,
+    ).colorScheme.scrim,
     context: context,
     builder: (
       context,

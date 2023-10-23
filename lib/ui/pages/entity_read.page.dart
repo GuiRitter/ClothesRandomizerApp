@@ -59,11 +59,11 @@ class EntityReadPage extends StatelessWidget {
             entityBloc.entity!.entityName,
           ),
           actions: [
-            TextButton(
+            IconButton(
               onPressed: () => onCreatePressed(
                 context: context,
               ),
-              child: const Icon(
+              icon: const Icon(
                 Icons.add,
               ),
             ),
@@ -77,7 +77,8 @@ class EntityReadPage extends StatelessWidget {
                   bottom: borderSide,
                   left: borderSide,
                   right: borderSide,
-                  top: borderSide),
+                top: borderSide,
+              ),
               columns: [
                 ...entityBloc.entity!.columnDisplayList.map(
                   (

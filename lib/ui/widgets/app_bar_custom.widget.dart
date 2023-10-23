@@ -25,7 +25,15 @@ AppBar appBarCustom({
             Text(
               l10n.title,
               style: theme.textTheme.bodySmall!.copyWith(
-                color: theme.colorScheme.onPrimary,
+                color: Color.lerp(
+                  Theme.of(
+                    context,
+                  ).textTheme.bodySmall!.color,
+                  Theme.of(
+                    context,
+                  ).appBarTheme.foregroundColor,
+                  0.5,
+                ),
               ),
             ),
             Text(

@@ -71,11 +71,11 @@ String treatException({
   return exception.toString();
 }
 
-class MyApp extends StatelessWidget {
-  static final ValueNotifier<ThemeEnum> themeNotifier = ValueNotifier(
-    ThemeEnum.system,
-  );
+final ValueNotifier<ThemeEnum> themeNotifier = ValueNotifier(
+  ThemeEnum.system,
+);
 
+class MyApp extends StatelessWidget {
   const MyApp({
     super.key,
   });

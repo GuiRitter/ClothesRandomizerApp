@@ -38,6 +38,12 @@ class _SignInPageState extends State<SignInPage> {
       context,
     )!;
 
+    final theme = Theme.of(
+      context,
+    );
+
+    final fieldPadding = theme.textTheme.labelLarge?.fontSize ?? 0.0;
+
     return Scaffold(
       appBar: appBarCustom(
         context: context,
@@ -74,6 +80,9 @@ class _SignInPageState extends State<SignInPage> {
                       value,
                     ) =>
                         (value?.isEmpty ?? true) ? l10n.invalidUserID : null,
+                  ),
+                  SizedBox.square(
+                    dimension: fieldPadding,
                   ),
                   TextFormField(
                     autofillHints: const [

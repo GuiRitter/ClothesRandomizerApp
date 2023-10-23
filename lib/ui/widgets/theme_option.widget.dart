@@ -21,29 +21,29 @@ class ThemeOptionWidget extends StatelessWidget {
   Widget build(
     BuildContext context,
   ) {
-    final checked = MyApp.themeNotifier.value == themeMode;
-
-    return ListTile(
-      onTap: () => onThemeTapped(
+    return RadioListTile(
+      groupValue: themeNotifier.value,
+      value: themeMode,
+      onChanged: (
+        ThemeEnum? newValue,
+      ) =>
+          onThemeChanged(
         context: context,
         themeMode: themeMode,
       ),
       title: Text(
         title,
       ),
-      trailing: Icon(
-        checked ? Icons.radio_button_checked : Icons.radio_button_unchecked,
-      ),
     );
   }
 
-  onThemeTapped({
+  onThemeChanged({
     required BuildContext context,
     required ThemeEnum themeMode,
   }) {
     _log("onThemeTapped").enum_("themeMode", themeMode).print();
 
-    MyApp.themeNotifier.value = themeMode;
+    themeNotifier.value = themeMode;
 
     SharedPreferences.getInstance().then(
       (

@@ -150,6 +150,9 @@ class AppBarPopupMenuWidget extends StatelessWidget {
         break;
       case AppBarPopupMenuEnum.theme:
         showDialog(
+          barrierColor: Theme.of(
+            context,
+          ).colorScheme.scrim,
           context: context,
           builder: (
             context,

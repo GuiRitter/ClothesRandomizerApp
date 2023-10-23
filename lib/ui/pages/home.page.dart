@@ -2,11 +2,15 @@ import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
 import 'package:clothes_randomizer_app/models/local.model.dart';
 import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart';
 import 'package:clothes_randomizer_app/ui/widgets/app_bar_popup_menu.widget.dart';
+import 'package:clothes_randomizer_app/ui/widgets/drop_down_menu.widget.dart';
 import 'package:clothes_randomizer_app/ui/widgets/use.widget.dart';
 import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+
+import 'package:clothes_randomizer_app/ui/widgets/bottom_app_bar.widget.dart'
+    as bottom_app_bar_widget;
 
 final _log = logger("HomePage");
 
@@ -80,33 +84,31 @@ class HomePage extends StatelessWidget {
                             l10n.selectTypeString,
                           ),
                           ListTile(
-                            title: DropdownButton<PieceOfClothingTypeModel>(
-                              value: dataBloc.pieceOfClothingTypeSelected,
-                              icon: const Icon(
-                                Icons.arrow_drop_down,
-                              ),
-                              isExpanded: true,
-                              onChanged: (
+                            title: DropDownMenuWidget<PieceOfClothingTypeModel>(
+                              name: "PieceOfClothingTypeDropDown",
+                              initialSelection:
+                                  dataBloc.pieceOfClothingTypeSelected,
+                              onSelected: (
                                 value,
                               ) =>
                                   onPieceOfClothingTypeChanged(
                                 context: context,
                                 value: value,
                               ),
-                              items: dataBloc.pieceOfClothingTypeList
-                                  .map(
-                                    (
-                                      mPieceOfClothingType,
-                                    ) =>
-                                        DropdownMenuItem<
-                                            PieceOfClothingTypeModel>(
-                                      value: mPieceOfClothingType,
-                                      child: Text(
-                                        mPieceOfClothingType.name,
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
+                              requestFocusOnTap: false,
+                              dropdownMenuEntries:
+                                  dataBloc.pieceOfClothingTypeList
+                                      .map(
+                                        (
+                                          mPieceOfClothingType,
+                                        ) =>
+                                            DropdownMenuEntry<
+                                                PieceOfClothingTypeModel>(
+                                          value: mPieceOfClothingType,
+                                          label: mPieceOfClothingType.name,
+                                        ),
+                                      )
+                                      .toList(),
                             ),
                           ),
                           SizedBox.square(
@@ -116,29 +118,25 @@ class HomePage extends StatelessWidget {
                             l10n.selectLocationString,
                           ),
                           ListTile(
-                            title: DropdownButton<LocalModel>(
-                              value: dataBloc.localSelected,
-                              icon: const Icon(
-                                Icons.arrow_drop_down,
-                              ),
-                              isExpanded: true,
-                              onChanged: (
+                            title: DropDownMenuWidget<LocalModel>(
+                              name: "LocalDropDown",
+                              initialSelection: dataBloc.localSelected,
+                              onSelected: (
                                 value,
                               ) =>
                                   onLocalChanged(
                                 context: context,
                                 value: value,
                               ),
-                              items: dataBloc.localList
+                              requestFocusOnTap: false,
+                              dropdownMenuEntries: dataBloc.localList
                                   .map(
                                     (
                                       mLocal,
                                     ) =>
-                                        DropdownMenuItem<LocalModel>(
+                                        DropdownMenuEntry<LocalModel>(
                                       value: mLocal,
-                                      child: Text(
-                                        mLocal.name,
-                                      ),
+                                      label: mLocal.name,
                                     ),
                                   )
                                   .toList(),
@@ -171,11 +169,8 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-            BottomAppBar(
-              color: theme.scaffoldBackgroundColor,
-              padding: EdgeInsets.all(
-                fieldPadding,
-              ),
+            bottom_app_bar_widget.build(
+              context: context,
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(

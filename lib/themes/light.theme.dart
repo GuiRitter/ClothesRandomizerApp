@@ -7,40 +7,40 @@ ThemeData light({
       colorScheme: ColorScheme.fromSwatch(
         primarySwatch: MaterialColor(
           const Color(
-            0xFF50C878,
+            0xFF90c2d7,
             // 0xFFe7f7eb,
             // 0xFF006a2a,
           ).value,
           const {
             50: Color(
-              0xFFe7f7eb,
+              0xFFe3f0f4,
             ),
             100: Color(
-              0xFFc4ebcf,
+              0xFFb9d9e6,
             ),
             200: Color(
-              0xFF9edeb0,
+              0xFF90c2d7,
             ),
             300: Color(
-              0xFF73d290,
+              0xFF6aaac7,
             ),
             400: Color(
-              0xFF50c878,
+              0xFF4f99be,
             ),
             500: Color(
-              0xFF24be60,
+              0xFF358ab5,
             ),
             600: Color(
-              0xFF19ae55,
+              0xFF287daa,
             ),
             700: Color(
-              0xFF079b49,
+              0xFF1b6d9a,
             ),
             800: Color(
-              0xFF008a3e,
+              0xFF105d89,
             ),
             900: Color(
-              0xFF006a2a,
+              0xFF00416a,
             ),
           },
         ),

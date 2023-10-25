@@ -32,7 +32,7 @@ class TabsPage extends StatelessWidget {
     if (loadingBloc.isLoading) {
       return const LoadingPage();
     } else if (userBloc.token != null) {
-      if (entityBloc.entity != null) {
+      if (entityBloc.entityTemplate != null) {
         return {
           StateCRUD.create: const EntityWritePage(),
           StateCRUD.read: const EntityReadPage(),

@@ -7,7 +7,7 @@ extension EntityHasDependency on Map<String, dynamic> {
 }
 
 extension EntityIdOnly on Map<String, dynamic> {
-  asIdOnly() => Map<String, dynamic>.fromEntries(
+  Map<String, dynamic> asIdOnly() => Map<String, dynamic>.fromEntries(
         entries.where(
           (
             entry,

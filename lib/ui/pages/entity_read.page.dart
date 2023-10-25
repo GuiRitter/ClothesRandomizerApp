@@ -56,7 +56,7 @@ class EntityReadPage extends StatelessWidget {
             ),
           ),
           subtitle: l10n.entitiesName(
-            entityBloc.entity!.entityName,
+            entityBloc.entityTemplate!.entityName,
           ),
           actions: [
             TextButton(
@@ -80,14 +80,14 @@ class EntityReadPage extends StatelessWidget {
                 top: borderSide,
               ),
               columns: [
-                ...entityBloc.entity!.columnDisplayList.map(
+                ...entityBloc.entityTemplate!.columnDisplayList.map(
                   (
                     mColumn,
                   ) =>
                       DataColumn(
                     label: _boldText(
                       label: l10n.entityHeader(
-                        "${entityBloc.entity!.entityName}__$mColumn",
+                        "${entityBloc.entityTemplate!.entityName}__${mColumn.name}",
                       ),
                     ),
                   ),
@@ -108,13 +108,13 @@ class EntityReadPage extends StatelessWidget {
                       // This is used in lieu of `dataRowColor` because it's not working
                       onLongPress: () {},
                       cells: [
-                        ...entityBloc.entity!.columnDisplayList.map(
+                        ...entityBloc.entityTemplate!.columnDisplayList.map(
                           (
                             mColumn,
                           ) =>
                               DataCell(
                             Text(
-                              mEntity[mColumn],
+                              mEntity[mColumn.name],
                             ),
                           ),
                         ),
@@ -200,11 +200,11 @@ class EntityReadPage extends StatelessWidget {
         return AlertDialog(
           content: Text(
             "${l10n.deleteEntity(
-              entityBloc.entity!.entityName,
-            )}${entityBloc.entity!.getDescription(
+              entityBloc.entityTemplate!.entityName,
+            )}${entityBloc.entityTemplate!.getDescription(
               entity,
             )}?${entity.hasDependency() ? l10n.deleteEntityDependency(
-                entityBloc.entity!.entityName,
+                entityBloc.entityTemplate!.entityName,
               ) : ""}",
           ),
           actions: [
@@ -214,7 +214,6 @@ class EntityReadPage extends StatelessWidget {
                 context: context,
               ),
             ),
-            // TODO
             buildTextButton(
               label: l10n.remove,
               onPressed: () => onDialogOkPressed(
@@ -246,7 +245,7 @@ class EntityReadPage extends StatelessWidget {
     }
 
     final result = await entityBloc.deleteCascade(
-      entity: entity,
+      entityToDelete: entity,
     );
 
     if (result.hasMessageNotIn(

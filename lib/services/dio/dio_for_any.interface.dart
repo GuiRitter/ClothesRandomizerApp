@@ -31,6 +31,16 @@ abstract class DioForAny {
     ProgressCallback? onReceiveProgress,
   });
 
+  Future<Result> patchResult(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  });
+
   Future<Result> postResult(
     String path, {
     Object? data,

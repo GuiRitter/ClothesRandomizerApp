@@ -118,10 +118,13 @@ class EntityReadPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const DataCell(
+                        DataCell(
                           ElevatedButton(
-                            onPressed: null,
-                            child: Icon(
+                            onPressed: () => onEditPressed(
+                              context: context,
+                              entity: mEntity,
+                            ),
+                            child: const Icon(
                               Icons.edit,
                             ),
                           ),
@@ -169,7 +172,7 @@ class EntityReadPage extends StatelessWidget {
       listen: false,
     );
 
-    entityBloc.writeEntity(
+    entityBloc.manageEntity(
       id: null,
     );
   }
@@ -255,5 +258,19 @@ class EntityReadPage extends StatelessWidget {
         message: result.message,
       );
     }
+  }
+
+  onEditPressed({
+    required BuildContext context,
+    required Map<String, dynamic> entity,
+  }) {
+    final entityBloc = Provider.of<EntityBloc>(
+      context,
+      listen: false,
+    );
+
+    entityBloc.manageEntity(
+      id: entity["id"],
+    );
   }
 }

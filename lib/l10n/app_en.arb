@@ -39,6 +39,7 @@
   "menuIgnoreItem": "Ignore",
   "menuRegardItem": "Regard",
   "menuRemoveItem": "Remove use",
+  "noChangesToUpdate": "No changes to update.",
   "ok": "Ok",
   "password": "Password",
   "randomizeButtonString": "Randomize",

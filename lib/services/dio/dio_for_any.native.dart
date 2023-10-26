@@ -73,6 +73,37 @@ class DioForAnyNative extends DioForNative implements DioForAny {
   }
 
   @override
+  Future<Result> patchResult(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    try {
+      final response = await patch(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+        cancelToken: cancelToken,
+        onSendProgress: onSendProgress,
+        onReceiveProgress: onReceiveProgress,
+      );
+
+      return Result.fromResponse(
+        response: response,
+      );
+    } catch (exception) {
+      return Result.fromException(
+        exception: exception,
+      );
+    }
+  }
+
+  @override
   Future<Result> postResult(
     String path, {
     Object? data,

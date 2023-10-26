@@ -125,7 +125,7 @@ void _onSavePressed({
 }) async {
   _log("_onSavePressed").exists("entityBloc", entityBloc).print();
 
-  final result = await entityBloc.createEntity();
+  final result = await entityBloc.writeEntity();
 
   if (result.hasMessageNotIn(
     status: ResultStatus.success,
@@ -254,7 +254,7 @@ class EntityWritePage extends StatelessWidget {
       listen: false,
     );
 
-    entityBloc.manageEntity(
+    entityBloc.manageEntityList(
       entityModel: entityBloc.entityTemplate!,
     );
   }

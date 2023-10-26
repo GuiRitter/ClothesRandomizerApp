@@ -96,7 +96,7 @@ class AppBarPopupMenuWidget extends StatelessWidget {
       listen: false,
     );
 
-    final result = await entityBloc.manageEntity(
+    final result = await entityBloc.manageEntityList(
       entityModel: model,
     );
 

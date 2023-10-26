@@ -186,9 +186,9 @@ class _SignInPageState extends State<SignInPage> {
       return;
     }
 
-    _formKey.currentState?.save();
-
     TextInput.finishAutofillContext();
+
+    _formKey.currentState?.save();
 
     final result = await userBloc.signIn(
       SignInModel(

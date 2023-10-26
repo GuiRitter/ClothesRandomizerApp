@@ -46,9 +46,9 @@ ThemeData light({
         ),
         accentColor: const Color.fromARGB(
           255,
-          128,
-          255,
-          0,
+          218,
+          160,
+          106,
         ),
         backgroundColor: Colors.white,
         brightness: Brightness.light,

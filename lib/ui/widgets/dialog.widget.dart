@@ -13,7 +13,7 @@ Widget buildRowForMultiChoice({
 Widget buildTextButton({
   required String label,
   required void Function() onPressed,
-  required bool align,
+  bool align = false,
 }) =>
     TextButton(
       style: align

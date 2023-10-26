@@ -4,6 +4,7 @@ import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
 import 'package:clothes_randomizer_app/main.dart';
 import 'package:clothes_randomizer_app/models/sign_in.model.dart';
+import 'package:clothes_randomizer_app/ui/widgets/app_bar_custom.widget.dart';
 import 'package:clothes_randomizer_app/ui/widgets/app_bar_popup_menu.widget.dart';
 import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -38,13 +39,8 @@ class _SignInPageState extends State<SignInPage> {
     )!;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(
-            context,
-          )!
-              .title,
-        ),
+      appBar: appBarCustom(
+        context: context,
         actions: [
           AppBarPopupMenuWidget.signedOut(),
         ],

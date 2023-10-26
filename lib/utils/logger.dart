@@ -66,6 +66,14 @@ class Log {
     return this;
   }
 
+  Log existsList(
+    String key,
+    List<dynamic>? value,
+  ) {
+    argumentMap[key] = (value != null) ? value.length : null;
+    return this;
+  }
+
   // Log json(
   //   String key,
   //   dynamic value,

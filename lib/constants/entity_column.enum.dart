@@ -1,0 +1,4 @@
+enum EntityColumnKind {
+  text,
+  entitySingle;
+}

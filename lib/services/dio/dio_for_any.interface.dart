@@ -11,12 +11,33 @@ import 'dio_for_any.stub.dart'
 abstract class DioForAny {
   late BaseOptions options;
 
+  /// factory constructor to return the correct implementation.
+  factory DioForAny() => getDioForAny();
+
+  Future<Result> deleteResult(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+  });
+
   Future<Result> getResult(
     String path, {
     Map<String, dynamic>? queryParameters,
     Object? data,
     Options? options,
     CancelToken? cancelToken,
+    ProgressCallback? onReceiveProgress,
+  });
+
+  Future<Result> patchResult(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   });
 
@@ -29,7 +50,4 @@ abstract class DioForAny {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   });
-
-  /// factory constructor to return the correct implementation.
-  factory DioForAny() => getDioForAny();
 }

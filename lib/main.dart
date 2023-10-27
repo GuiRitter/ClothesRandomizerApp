@@ -157,9 +157,16 @@ class MyApp extends StatelessWidget {
           __,
         ) =>
             MaterialApp(
-          title: getTitle(
+          title: "Clothes Randomizer",
+          onGenerateTitle: (
             context,
-          ),
+          ) {
+            final l10n = AppLocalizations.of(
+              context,
+            )!;
+
+            return l10n.title;
+          },
           theme: (kDebugMode && (themeMode == ThemeEnum.testLight))
               ? testThemeLight
               : themeLight,
@@ -176,15 +183,5 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  /// Only needed here
-  getTitle(
-    context,
-  ) {
-    var a = AppLocalizations.of(
-      context,
-    );
-    return a?.title ?? "";
   }
 }

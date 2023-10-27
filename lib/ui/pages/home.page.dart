@@ -4,6 +4,8 @@ import 'package:clothes_randomizer_app/models/piece_of_clothing_type.model.dart'
 import 'package:clothes_randomizer_app/ui/widgets/app_bar_custom.widget.dart';
 import 'package:clothes_randomizer_app/ui/widgets/app_bar_popup_menu.widget.dart';
 import 'package:clothes_randomizer_app/ui/widgets/use.widget.dart';
+import 'package:clothes_randomizer_app/ui/widgets/use.widget.dart'
+    as use_widget;
 import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,9 +16,32 @@ final GlobalKey appBarKey = GlobalKey();
 final _log = logger("HomePage");
 
 class HomePage extends StatelessWidget {
-  const HomePage({
+  final GlobalKey localDropDownKey = GlobalKey();
+
+  HomePage({
     super.key,
   });
+
+  /// https://stackoverflow.com/a/59499191/1781376
+  ///
+  /// https://gist.github.com/spauldhaliwal/942eec24895a7ed79e342aa784a62fa6
+  void openDropdown() {
+    GestureDetector? detector;
+    void searchForGestureDetector(BuildContext? element) {
+      element?.visitChildElements((element) {
+        if (element.widget is GestureDetector) {
+          detector = element.widget as GestureDetector?;
+        } else {
+          searchForGestureDetector(element);
+        }
+      });
+    }
+
+    searchForGestureDetector(localDropDownKey.currentContext);
+    assert(detector != null);
+
+    detector?.onTap?.call();
+  }
 
   @override
   Widget build(
@@ -115,6 +140,7 @@ class HomePage extends StatelessWidget {
                           ),
                           ListTile(
                             title: DropdownButton<LocalModel>(
+                              key: localDropDownKey,
                               value: dataBloc.localSelected,
                               icon: const Icon(
                                 Icons.arrow_drop_down,
@@ -190,6 +216,21 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void onRandomPressed({
+    required BuildContext context,
+    required DataBloc dataBloc,
+  }) {
+    if (dataBloc.localSelected == null) {
+      openDropdown();
+      return;
+    }
+
+    use_widget.onRandomPressed(
+      context: context,
+      dataBloc: dataBloc,
     );
   }
 

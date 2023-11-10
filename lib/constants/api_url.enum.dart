@@ -34,6 +34,9 @@ enum ApiUrl {
   ),
   decrementUse(
     path: "use/decrement",
+  ),
+  typeUse(
+    path: "type_use",
   );
 
   final String path;

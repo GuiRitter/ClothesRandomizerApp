@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
 import 'package:clothes_randomizer_app/constants/api_url.enum.dart';
+import 'package:clothes_randomizer_app/constants/crud.enum.dart';
 import 'package:clothes_randomizer_app/constants/models.enum.dart';
 import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
@@ -40,6 +41,30 @@ class DataBloc extends ChangeNotifier {
   PieceOfClothingTypeModel? _pieceOfClothingTypeSelected;
   UseModel? _useSelected;
 
+  List<LocalModel> get localLinkedWithTypeList =>
+      (_pieceOfClothingTypeSelected != null)
+          ? _typeUseList
+              .where(
+                (
+                  wTypeUse,
+                ) =>
+                    _pieceOfClothingTypeSelected!.id ==
+                    wTypeUse.pieceOfClothingTypeId,
+              )
+              .map(
+                (
+                  mTypeUse,
+                ) =>
+                    _localList.singleWhere(
+                  (
+                    swLocal,
+                  ) =>
+                      mTypeUse.localId == swLocal.id,
+                ),
+              )
+              .toList()
+          : [];
+
   List<LocalModel> get localList {
     if (_pieceOfClothingTypeSelected == null) {
       return List<LocalModel>.empty();
@@ -63,6 +88,31 @@ class DataBloc extends ChangeNotifier {
       localFiltered,
     );
   }
+
+  List<LocalModel> get localNotLinkedWithTypeList =>
+      (_pieceOfClothingTypeSelected != null)
+          ? _localList
+              .where(
+                (
+                  wLocal,
+                ) =>
+                    _typeUseList
+                        .where(
+                          (
+                            wTypeUse,
+                          ) =>
+                              _pieceOfClothingTypeSelected!.id ==
+                              wTypeUse.pieceOfClothingTypeId,
+                        )
+                        .every(
+                          (
+                            eTypeUse,
+                          ) =>
+                              wLocal.id != eTypeUse.localId,
+                        ),
+              )
+              .toList()
+          : [];
 
   LocalModel? get localSelected => _localSelected;
 
@@ -265,6 +315,57 @@ class DataBloc extends ChangeNotifier {
     _useSelected!.isIgnored = !_useSelected!.isIgnored;
     _useSelected = null;
     notifyListeners();
+  }
+
+  Future<Result> updateLink({
+    required StateCRUD operation,
+    required LocalModel localModel,
+  }) async {
+    _log("updateLink").print();
+
+    final loadingBloc = Provider.of<LoadingBloc>(
+      Settings.navigatorState.currentContext!,
+      listen: false,
+    );
+
+    final cancelToken = CancelToken();
+    loadingBloc.show(
+      cancelToken: cancelToken,
+      isNotify: true,
+    );
+
+    final typeUse = TypeUseModel(
+      pieceOfClothingTypeId: pieceOfClothingTypeSelected!.id,
+      localId: localModel.id,
+    );
+
+    final response = await {
+      StateCRUD.create: () => _api.postResult(
+            ApiUrl.typeUse.path,
+            cancelToken: cancelToken,
+            data: typeUse.toJson(),
+          ),
+      StateCRUD.delete: () => _api.deleteResult(
+            ApiUrl.typeUse.path,
+            cancelToken: cancelToken,
+            data: typeUse.toJson(),
+          )
+    }[operation]!();
+
+    loadingBloc.hide(
+      isNotify: false,
+    );
+
+    if (response.status == ResultStatus.success) {
+      revalidateData(
+        refreshBaseData: true,
+        refreshUseList: true,
+      );
+    } else {
+      notifyListeners();
+    }
+
+    return response.withoutData();
   }
 
   Future<Result> updateUse({

@@ -22,6 +22,13 @@ class TypeUseModel extends TemplateModel {
         localId: json["local"],
       );
 
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["pieceOfClothingType"] = pieceOfClothingTypeId;
+    data["local"] = localId;
+    return data;
+  }
+
   static List<TypeUseModel> fromList(
     List<dynamic> query,
   ) =>

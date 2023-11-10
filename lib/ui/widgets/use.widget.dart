@@ -165,8 +165,9 @@ Future<void> showConfirmDialog(
 
 class UseWidget extends StatelessWidget {
   final int index;
+  final popupMenuButtonKey = GlobalKey();
 
-  const UseWidget({
+  UseWidget({
     super.key,
     required this.index,
   });
@@ -218,6 +219,7 @@ class UseWidget extends StatelessWidget {
         ),
       ),
       trailing: PopupMenuButton<UsePopupMenuEnum?>(
+        key: popupMenuButtonKey,
         onOpened: () => onUsePopupMenuOpened(
           context: context,
           use: use,
@@ -278,6 +280,11 @@ class UseWidget extends StatelessWidget {
           value: value,
         ),
       ),
+      onLongPress: () {
+        // https://stackoverflow.com/a/43383966/1781376
+        dynamic state = popupMenuButtonKey.currentState;
+        state.showButtonMenu();
+      },
     );
   }
 

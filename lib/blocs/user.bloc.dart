@@ -2,6 +2,7 @@ import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
 import 'package:clothes_randomizer_app/constants/api_url.enum.dart';
 import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
+import 'package:clothes_randomizer_app/constants/state.enum.dart';
 import 'package:clothes_randomizer_app/models/result.dart';
 import 'package:clothes_randomizer_app/models/sign_in.model.dart';
 import 'package:clothes_randomizer_app/utils/logger.dart';
@@ -16,6 +17,10 @@ class UserBloc extends ChangeNotifier {
   String? _token;
 
   final _api = Settings.api;
+
+  var _state = StateUI.home;
+
+  StateUI get state => _state;
 
   String? get token => _token;
 
@@ -33,6 +38,17 @@ class UserBloc extends ChangeNotifier {
       Settings.token,
       "",
     );
+  }
+
+  setState({
+    required StateUI state,
+    bool isNotify = false,
+  }) {
+    _state = state;
+
+    if (isNotify) {
+      notifyListeners();
+    }
   }
 
   Future<Result> signIn(

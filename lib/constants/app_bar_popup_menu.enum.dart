@@ -3,6 +3,7 @@ enum AppBarPopupMenuEnum {
   local,
   pieceOfClothingType,
   pieceOfClothing,
+  link,
   theme,
   signOut;
 }

@@ -1,10 +1,12 @@
 import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
 import 'package:clothes_randomizer_app/blocs/loading.bloc.dart';
+import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/crud.enum.dart';
 import 'package:clothes_randomizer_app/constants/entity.enum.dart';
 import 'package:clothes_randomizer_app/constants/entity_column.enum.dart';
 import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
+import 'package:clothes_randomizer_app/constants/state.enum.dart';
 import 'package:clothes_randomizer_app/models/entity_column.model.dart';
 import 'package:clothes_randomizer_app/models/result.dart';
 import 'package:clothes_randomizer_app/utils/data.dart';
@@ -103,6 +105,15 @@ class EntityBloc extends ChangeNotifier {
     _entityListMap.clear();
     _entityOld = null;
 
+    final userBloc = Provider.of<UserBloc>(
+      Settings.navigatorState.currentContext!,
+      listen: false,
+    );
+
+    userBloc.setState(
+      state: StateUI.home,
+    );
+
     notifyListeners();
 
     final dataBloc = Provider.of<DataBloc>(
@@ -119,7 +130,7 @@ class EntityBloc extends ChangeNotifier {
   manageEntity({
     required String? id,
   }) async {
-    _log("writeEntity").raw("id", id).print();
+    _log("manageEntity").raw("id", id).print();
 
     _entityList.removeWhere(
       (
@@ -167,13 +178,22 @@ class EntityBloc extends ChangeNotifier {
   Future<Result> manageEntityList({
     required EntityModel entityModel,
   }) async {
-    _log("manageEntity").enum_("entity", _entityTemplate).print();
+    _log("manageEntityList").enum_("entity", _entityTemplate).print();
 
     _entityTemplate = entityModel;
     _state = StateCRUD.read;
     _entityListMap.clear();
 
     _entityOld = null;
+
+    final userBloc = Provider.of<UserBloc>(
+      Settings.navigatorState.currentContext!,
+      listen: false,
+    );
+
+    userBloc.setState(
+      state: StateUI.crud,
+    );
 
     final response = await _readEntityList(
       entityModel: entityModel,

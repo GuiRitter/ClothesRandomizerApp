@@ -4,6 +4,7 @@ import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/app_bar_popup_menu.enum.dart';
 import 'package:clothes_randomizer_app/constants/entity.enum.dart';
 import 'package:clothes_randomizer_app/constants/result_status.enum.dart';
+import 'package:clothes_randomizer_app/constants/state.enum.dart';
 import 'package:clothes_randomizer_app/constants/theme.enum.dart';
 import 'package:clothes_randomizer_app/dialogs.dart';
 import 'package:clothes_randomizer_app/main.dart';
@@ -36,6 +37,9 @@ class AppBarPopupMenuWidget extends StatelessWidget {
             l10n: l10n,
           ),
           _buildItemPieceOfClothing(
+            l10n: l10n,
+          ),
+          _buildItemLink(
             l10n: l10n,
           ),
           _buildItemTheme(
@@ -148,6 +152,18 @@ class AppBarPopupMenuWidget extends StatelessWidget {
           model: EntityModel.pieceOfClothing,
         );
         break;
+      case AppBarPopupMenuEnum.link:
+        final userBloc = Provider.of<UserBloc>(
+          context,
+          listen: false,
+        );
+
+        userBloc.setState(
+          state: StateUI.link,
+          isNotify: true,
+        );
+
+        break;
       case AppBarPopupMenuEnum.theme:
         showDialog(
           context: context,
@@ -234,6 +250,14 @@ class AppBarPopupMenuWidget extends StatelessWidget {
         child: Text(
           text,
         ),
+      );
+
+  static PopupMenuItem<AppBarPopupMenuEnum> _buildItemLink({
+    required AppLocalizations l10n,
+  }) =>
+      _buildItem(
+        enumValue: AppBarPopupMenuEnum.link,
+        text: l10n.links,
       );
 
   static PopupMenuItem<AppBarPopupMenuEnum> _buildItemLocal({

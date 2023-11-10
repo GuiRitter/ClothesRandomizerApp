@@ -1,6 +1,11 @@
 import 'package:clothes_randomizer_app/ui/pages/home.page.dart';
+import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+double? appBarElevation;
+
+final _log = logger("appBarCustom");
 
 AppBar appBarCustom({
   required BuildContext context,
@@ -41,4 +46,51 @@ AppBar appBarCustom({
     title: title,
     actions: actions,
   );
+}
+
+Future<double> getAppBarElevation({
+  required int delay,
+}) async {
+  _log("getAppBarElevation").raw("delay", delay).print();
+
+  if (appBarElevation != null) {
+    return appBarElevation!;
+  }
+
+  await Future.delayed(
+    Duration(
+      microseconds: delay,
+    ),
+  );
+
+  final BuildContext? context = appBarKey.currentContext;
+
+  if (context != null) {
+    final statefulElement = context as StatefulElement;
+
+    SingleChildRenderObjectElement? singleChildRenderObjectElement;
+
+    statefulElement.visitChildElements(
+      (
+        element,
+      ) {
+        singleChildRenderObjectElement =
+            element as SingleChildRenderObjectElement;
+      },
+    );
+
+    final semantics = singleChildRenderObjectElement!.widget as Semantics;
+
+    final annotatedRegion = semantics.child as AnnotatedRegion;
+
+    final material = annotatedRegion.child as Material;
+
+    appBarElevation = material.elevation;
+
+    return appBarElevation!;
+  } else {
+    return await getAppBarElevation(
+      delay: delay + 1,
+    );
+  }
 }

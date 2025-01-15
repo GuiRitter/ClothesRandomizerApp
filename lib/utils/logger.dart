@@ -1,7 +1,12 @@
 import 'dart:convert';
 
-import 'package:clothes_randomizer_app/utils/date_time.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_guiritter/extension/date_time.dart';
+
+dynamic getExistsMark(
+  dynamic value,
+) =>
+    (value != null) ? {} : null;
 
 String hideSecret(
   dynamic text,
@@ -11,11 +16,6 @@ String hideSecret(
   }
   return "length: ${text.toString().length}";
 }
-
-dynamic getExistsMark(
-  dynamic value,
-) =>
-    (value != null) ? {} : null;
 
 Log Function(
   String methodName,
@@ -95,9 +95,7 @@ class Log {
   void print() => debugPrint(
         "${jsonEncode(
           <String, dynamic>{
-            "dateTime": getISO8601(
-              dateTime: DateTime.now(),
-            ),
+            "dateTime": DateTime.now().toISO8601WithTimeZoneString(),
             "file": fileName,
             "method": methodName,
             ...argumentMap,

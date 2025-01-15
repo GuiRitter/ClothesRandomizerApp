@@ -5,10 +5,10 @@ import 'package:clothes_randomizer_app/dialogs.dart';
 import 'package:clothes_randomizer_app/main.dart';
 import 'package:clothes_randomizer_app/models/use.model.dart';
 import 'package:clothes_randomizer_app/ui/widgets/dialog.widget.dart';
-import 'package:clothes_randomizer_app/utils/date_time.dart';
 import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_guiritter/extension/date_time.dart';
 import 'package:provider/provider.dart';
 
 final _log = logger("UseWidget");
@@ -199,8 +199,7 @@ class UseWidget extends StatelessWidget {
     if (use.lastDateTime != null) {
       subtitle.add(
         l10n.lastUse(
-          formmatLastDateTime(
-            dateTime: use.lastDateTime!,
+          use.lastDateTime!.toHumanReadableString(
             locale: locale,
           ),
         ),

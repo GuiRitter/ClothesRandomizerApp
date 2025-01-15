@@ -1,8 +1,8 @@
 import 'package:clothes_randomizer_app/models/piece_of_clothing.model.dart';
 import 'package:clothes_randomizer_app/models/template.model.dart';
-import 'package:clothes_randomizer_app/utils/date_time.dart';
 import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:clothes_randomizer_app/utils/string.comparator.dart';
+import 'package:flutter_guiritter/extension/date_time.dart';
 
 class UseModel extends TemplateModel implements Comparable<UseModel>, Loggable {
   final int counter;
@@ -41,9 +41,7 @@ class UseModel extends TemplateModel implements Comparable<UseModel>, Loggable {
           pieceOfClothing,
         ),
         "counter": counter,
-        "lastDateTime": getISO8601(
-          dateTime: lastDateTime,
-        ),
+        "lastDateTime": lastDateTime.toISO8601WithTimeZoneString(),
       };
 
   @override

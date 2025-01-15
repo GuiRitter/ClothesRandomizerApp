@@ -236,8 +236,6 @@ class AppBarPopupMenuWidget extends StatelessWidget {
           newToken: null,
         );
         break;
-      default:
-        break;
     }
   }
 

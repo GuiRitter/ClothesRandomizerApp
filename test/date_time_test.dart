@@ -1,4 +1,4 @@
-import 'package:clothes_randomizer_app/utils/date_time.dart';
+import 'package:flutter_guiritter/extension/date_time.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -17,9 +17,7 @@ void main() {
       );
 
       expect(
-        getISO8601(
-          dateTime: dateTime,
-        ),
+        dateTime.toISO8601WithTimeZoneString(),
         input,
       );
     },

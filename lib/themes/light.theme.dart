@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 ThemeData light({
   required BuildContext context,
 }) =>
-    ThemeData.light().copyWith(
+    ThemeData.light(
+      useMaterial3: false,
+    ).copyWith(
       colorScheme: ColorScheme.fromSwatch(
         primarySwatch: MaterialColor(
           const Color(

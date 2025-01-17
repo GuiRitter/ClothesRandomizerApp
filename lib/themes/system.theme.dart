@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
 final themeByBrightness = {
-  Brightness.dark: ThemeData.dark(),
-  Brightness.light: ThemeData.light(),
+  Brightness.dark: ThemeData.dark(
+    useMaterial3: false,
+  ),
+  Brightness.light: ThemeData.light(
+    useMaterial3: false,
+  ),
 };
 
 ThemeData getTheme({

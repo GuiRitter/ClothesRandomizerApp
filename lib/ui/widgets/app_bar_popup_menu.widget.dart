@@ -9,10 +9,10 @@ import 'package:clothes_randomizer_app/constants/theme.enum.dart';
 import 'package:clothes_randomizer_app/dialogs.dart';
 import 'package:clothes_randomizer_app/main.dart';
 import 'package:clothes_randomizer_app/ui/widgets/theme_option.widget.dart';
-import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_guiritter/util/logger.dart';
 import 'package:provider/provider.dart';
 
 final _log = logger("AppBarPopupMenuWidget");
@@ -235,6 +235,8 @@ class AppBarPopupMenuWidget extends StatelessWidget {
         userBloc.validateAndSetToken(
           newToken: null,
         );
+        break;
+      default:
         break;
     }
   }

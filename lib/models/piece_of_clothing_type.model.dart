@@ -1,6 +1,6 @@
 import 'package:clothes_randomizer_app/models/template.model.dart';
-import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:clothes_randomizer_app/utils/string.comparator.dart';
+import 'package:flutter_guiritter/util/logger.dart';
 
 class PieceOfClothingTypeModel extends TemplateModel
     implements Comparable<PieceOfClothingTypeModel>, Loggable {

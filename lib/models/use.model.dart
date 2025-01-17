@@ -1,8 +1,8 @@
 import 'package:clothes_randomizer_app/models/piece_of_clothing.model.dart';
 import 'package:clothes_randomizer_app/models/template.model.dart';
-import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:clothes_randomizer_app/utils/string.comparator.dart';
 import 'package:flutter_guiritter/extension/date_time.dart';
+import 'package:flutter_guiritter/util/logger.dart';
 
 class UseModel extends TemplateModel implements Comparable<UseModel>, Loggable {
   final int counter;

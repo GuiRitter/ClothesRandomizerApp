@@ -6,10 +6,10 @@ import 'package:clothes_randomizer_app/main.dart';
 import 'package:clothes_randomizer_app/models/sign_in.model.dart';
 import 'package:clothes_randomizer_app/ui/widgets/app_bar_custom.widget.dart';
 import 'package:clothes_randomizer_app/ui/widgets/app_bar_popup_menu.widget.dart';
-import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_guiritter/util/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

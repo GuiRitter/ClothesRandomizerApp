@@ -8,7 +8,7 @@
 PRODUCT_NAME = clothes_randomizer_app
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = io.github.guiritter.clothesRandomizerApp
+PRODUCT_BUNDLE_IDENTIFIER = com.example.clothesRandomizerApp
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 Guilherme Alan Ritter All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2025 com.example. All rights reserved.

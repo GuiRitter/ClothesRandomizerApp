@@ -5,10 +5,10 @@ import 'package:clothes_randomizer_app/dialogs.dart';
 import 'package:clothes_randomizer_app/main.dart';
 import 'package:clothes_randomizer_app/models/use.model.dart';
 import 'package:clothes_randomizer_app/ui/widgets/dialog.widget.dart';
-import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_guiritter/extension/date_time.dart';
+import 'package:flutter_guiritter/util/logger.dart';
 import 'package:provider/provider.dart';
 
 final _log = logger("UseWidget");

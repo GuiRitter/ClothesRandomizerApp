@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:clothes_randomizer_app/blocs/user.bloc.dart';
 import 'package:clothes_randomizer_app/constants/settings.dart';
-import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_guiritter/util/logger.dart';
 import 'package:provider/provider.dart';
 
 final _log = logger("TokenInterceptor");

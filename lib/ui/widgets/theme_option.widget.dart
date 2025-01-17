@@ -1,8 +1,8 @@
 import 'package:clothes_randomizer_app/constants/settings.dart';
 import 'package:clothes_randomizer_app/constants/theme.enum.dart';
 import 'package:clothes_randomizer_app/main.dart';
-import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_guiritter/util/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final _log = logger("ThemeOptionWidget");

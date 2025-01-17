@@ -11,15 +11,13 @@ import 'package:clothes_randomizer_app/themes/light.theme.dart';
 import 'package:clothes_randomizer_app/themes/testDark.theme.dart';
 import 'package:clothes_randomizer_app/themes/testlight.theme.dart';
 import 'package:clothes_randomizer_app/ui/pages/tabs.page.dart';
-import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_guiritter/util/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-final _log = logger("MyApp");
 
 // flutter build web --base-href "/clothes_randomizer/"
 
@@ -28,6 +26,8 @@ void main() {
     const MyApp(),
   );
 }
+
+final _log = logger("MyApp");
 
 void showSnackBar({
   required String? message,

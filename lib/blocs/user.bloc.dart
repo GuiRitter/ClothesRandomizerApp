@@ -5,9 +5,9 @@ import 'package:clothes_randomizer_app/constants/settings.dart';
 import 'package:clothes_randomizer_app/constants/state.enum.dart';
 import 'package:clothes_randomizer_app/models/result.dart';
 import 'package:clothes_randomizer_app/models/sign_in.model.dart';
-import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_guiritter/util/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

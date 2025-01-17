@@ -1,7 +1,7 @@
 import 'package:clothes_randomizer_app/constants/entity.enum.dart';
 import 'package:clothes_randomizer_app/constants/entity_column.enum.dart';
-import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_guiritter/util/logger.dart';
 
 bool columnIsDisplay(EntityColumnModel model) => model.isDisplay;
 
@@ -32,13 +32,6 @@ class EntityColumnModel implements Loggable {
     required this.hints,
   });
 
-  EntityModel getModel() => EntityModel.values.singleWhere(
-        (
-          entityModel,
-        ) =>
-            type == entityModel.name,
-      );
-
   String get nameId => name.replaceAll(
         "__display",
         "",
@@ -52,4 +45,11 @@ class EntityColumnModel implements Loggable {
         "isDisplay": isDisplay,
         "hints": hints,
       };
+
+  EntityModel getModel() => EntityModel.values.singleWhere(
+        (
+          entityModel,
+        ) =>
+            type == entityModel.name,
+      );
 }

@@ -40,7 +40,7 @@ class TabsPage extends StatelessWidget {
               StateCRUD.read: () => const EntityReadPage(),
               StateCRUD.update: () => const EntityWritePage(),
             }[entityBloc.state]!(),
-        StateUI.home: () => HomePage(),
+        StateUI.home: () => const HomePage(),
         StateUI.link: () => const TypeUsePage(),
       }[userBloc.state]!();
     } else {

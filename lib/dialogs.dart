@@ -1,5 +1,5 @@
-import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_guiritter/util/logger.dart';
 
 final _log = logger("utils/dialogs");
 

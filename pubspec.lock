@@ -97,12 +97,10 @@ packages:
   flutter_guiritter:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "8b87807292780a56772802ba28ee91cba68a17d6"
-      url: "https://github.com/GuiRitter/FlutterGuiRitter"
-    source: git
-    version: "1.1.0+2"
+      path: "C:\\Desenv\\Universal\\z\\flutter_guiritter"
+      relative: false
+    source: path
+    version: "1.2.1+4"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -412,5 +410,5 @@ packages:
     source: hosted
     version: "1.1.0"
 sdks:
-  dart: ">=3.6.0 <4.0.0"
+  dart: ">=3.6.1 <4.0.0"
   flutter: ">=3.24.0"

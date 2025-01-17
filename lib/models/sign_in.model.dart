@@ -1,4 +1,4 @@
-import 'package:clothes_randomizer_app/utils/logger.dart';
+import 'package:flutter_guiritter/util/logger.dart';
 
 class SignInModel implements Loggable {
   late String userId;

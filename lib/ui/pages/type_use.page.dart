@@ -5,9 +5,9 @@ import 'package:clothes_randomizer_app/constants/state.enum.dart';
 import 'package:clothes_randomizer_app/models/local.model.dart';
 import 'package:clothes_randomizer_app/ui/widgets/app_bar_custom.widget.dart';
 import 'package:clothes_randomizer_app/ui/widgets/type_and_local_drop_down.widget.dart';
-import 'package:clothes_randomizer_app/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_guiritter/util/logger.dart';
 import 'package:provider/provider.dart';
 
 final _log = logger("TypeUsePage");

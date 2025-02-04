@@ -8,12 +8,16 @@ import 'package:clothes_randomizer_app/ui/widgets/app_bar_custom.widget.dart';
 import 'package:clothes_randomizer_app/ui/widgets/app_bar_popup_menu.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_guiritter/common/common.import.dart'
+    as common_gui_ritter show AppLocalizationsGuiRitter, l10nGuiRitter;
 import 'package:flutter_guiritter/util/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final _log = logger("SignInPage");
+
+common_gui_ritter.AppLocalizationsGuiRitter get l10nGuiRitter =>
+    common_gui_ritter.l10nGuiRitter!;
 
 class SignInPage extends StatefulWidget {
   const SignInPage({
@@ -34,10 +38,6 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(
     BuildContext context,
   ) {
-    var l10n = AppLocalizations.of(
-      context,
-    )!;
-
     return Scaffold(
       appBar: appBarCustom(
         context: context,
@@ -63,7 +63,7 @@ class _SignInPageState extends State<SignInPage> {
                       AutofillHints.username,
                     ],
                     decoration: InputDecoration(
-                      labelText: l10n.userID,
+                      labelText: l10nGuiRitter.userID,
                     ),
                     keyboardType: TextInputType.text,
                     onSaved: (
@@ -73,14 +73,16 @@ class _SignInPageState extends State<SignInPage> {
                     validator: (
                       value,
                     ) =>
-                        (value?.isEmpty ?? true) ? l10n.invalidUserID : null,
+                        (value?.isEmpty ?? true)
+                            ? l10nGuiRitter.invalidUserID
+                            : null,
                   ),
                   TextFormField(
                     autofillHints: const [
                       AutofillHints.password,
                     ],
                     decoration: InputDecoration(
-                      labelText: l10n.password,
+                      labelText: l10nGuiRitter.password,
                     ),
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: true,
@@ -91,7 +93,9 @@ class _SignInPageState extends State<SignInPage> {
                     validator: (
                       value,
                     ) =>
-                        (value?.isEmpty ?? true) ? l10n.invalidPassword : null,
+                        (value?.isEmpty ?? true)
+                            ? l10nGuiRitter.invalidPassword
+                            : null,
                   ),
                   Padding(
                     padding: EdgeInsets.only(
@@ -103,7 +107,7 @@ class _SignInPageState extends State<SignInPage> {
                     child: ElevatedButton(
                       onPressed: onSingInPressed,
                       child: Text(
-                        l10n.signIn,
+                        l10nGuiRitter.signIn,
                       ),
                     ),
                   ),

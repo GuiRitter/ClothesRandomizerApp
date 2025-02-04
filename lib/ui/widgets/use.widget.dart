@@ -7,11 +7,16 @@ import 'package:clothes_randomizer_app/models/use.model.dart';
 import 'package:clothes_randomizer_app/ui/widgets/dialog.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_guiritter/common/common.import.dart'
+    as common_gui_ritter show AppLocalizationsGuiRitter, l10nGuiRitter;
 import 'package:flutter_guiritter/extension/date_time.dart';
 import 'package:flutter_guiritter/util/logger.dart';
 import 'package:provider/provider.dart';
 
 final _log = logger("UseWidget");
+
+common_gui_ritter.AppLocalizationsGuiRitter get l10nGuiRitter =>
+    common_gui_ritter.l10nGuiRitter!;
 
 onDialogIgnoreRegardPressed({
   required BuildContext context,
@@ -96,7 +101,7 @@ Future<void> showConfirmDialog(
       final actionList = <Widget>[];
 
       final cancelButton = buildTextButton(
-        label: l10n.cancel,
+        label: l10nGuiRitter.cancel,
         onPressed: () => onDialogCancelPressed(
           context: context,
         ),
@@ -133,7 +138,7 @@ Future<void> showConfirmDialog(
       }
 
       final okButton = buildTextButton(
-        label: l10n.ok,
+        label: l10nGuiRitter.ok,
         onPressed: () => onDialogOkPressed(
           context: context,
           useAction: useAction,
@@ -264,7 +269,7 @@ class UseWidget extends StatelessWidget {
             PopupMenuItem<UsePopupMenuEnum>(
               value: null,
               child: Text(
-                l10n.cancel,
+                l10nGuiRitter.cancel,
               ),
             ),
           );

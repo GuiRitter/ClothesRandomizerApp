@@ -7,10 +7,15 @@ import 'package:clothes_randomizer_app/ui/widgets/dialog.widget.dart';
 import 'package:clothes_randomizer_app/utils/entity.extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_guiritter/common/common.import.dart'
+    as common_gui_ritter show AppLocalizationsGuiRitter, l10nGuiRitter;
 import 'package:flutter_guiritter/util/logger.dart';
 import 'package:provider/provider.dart';
 
 final _log = logger("EntityReadPage");
+
+common_gui_ritter.AppLocalizationsGuiRitter get l10nGuiRitter =>
+    common_gui_ritter.l10nGuiRitter!;
 
 Widget _boldText({
   required String label,
@@ -212,13 +217,13 @@ class EntityReadPage extends StatelessWidget {
           ),
           actions: [
             buildTextButton(
-              label: l10n.keep,
+              label: l10nGuiRitter.keep,
               onPressed: () => onDialogCancelPressed(
                 context: context,
               ),
             ),
             buildTextButton(
-              label: l10n.remove,
+              label: l10nGuiRitter.remove,
               onPressed: () => onDialogOkPressed(
                 context: context,
                 entity: entity,

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:clothes_randomizer_app/blocs/data.bloc.dart';
@@ -15,6 +16,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_guiritter/common/common.import.dart'
+    as common_gui_ritter show AppLocalizationsGuiRitter, l10nGuiRitter;
 import 'package:flutter_guiritter/util/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,6 +29,8 @@ void main() {
     const MyApp(),
   );
 }
+
+// flutter build web --base-href "/clothes_randomizer/"
 
 final _log = logger("MyApp");
 
@@ -176,6 +181,7 @@ class MyApp extends StatelessWidget {
           themeMode: themeMode.mode,
           // flutter gen-l10n
           localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localeResolutionCallback: populateL10nNotifier,
           supportedLocales: AppLocalizations.supportedLocales,
           scaffoldMessengerKey: Settings.snackState,
           navigatorKey: Settings.navigatorState,
@@ -184,4 +190,23 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+
+  Locale? populateL10nNotifier(
+    Locale? locale,
+    Iterable<Locale> supportedLocales,
+  ) {
+    common_gui_ritter.AppLocalizationsGuiRitter.delegate
+        .load(
+      locale!,
+    )
+        .then(
+      (
+        l10n,
+      ) {
+        common_gui_ritter.l10nGuiRitter = l10n;
+      },
+    );
+
+    return null;
+}
 }

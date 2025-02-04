@@ -7,10 +7,15 @@ import 'package:clothes_randomizer_app/models/entity_column.model.dart';
 import 'package:clothes_randomizer_app/ui/widgets/app_bar_custom.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_guiritter/common/common.import.dart'
+    as common_gui_ritter show AppLocalizationsGuiRitter, l10nGuiRitter;
 import 'package:flutter_guiritter/util/logger.dart';
 import 'package:provider/provider.dart';
 
 final _log = logger("EntityWritePage");
+
+common_gui_ritter.AppLocalizationsGuiRitter get l10nGuiRitter =>
+    common_gui_ritter.l10nGuiRitter!;
 
 Widget _buildDropDown({
   required EntityColumnModel column,
@@ -202,7 +207,7 @@ class EntityWritePage extends StatelessWidget {
           entityBloc: entityBlocAnon,
         ),
         child: Text(
-          l10n.save,
+          l10nGuiRitter.save,
         ),
       ),
     );

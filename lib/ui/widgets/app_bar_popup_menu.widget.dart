@@ -12,10 +12,15 @@ import 'package:clothes_randomizer_app/ui/widgets/theme_option.widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_guiritter/common/common.import.dart'
+    as common_gui_ritter show AppLocalizationsGuiRitter, l10nGuiRitter;
 import 'package:flutter_guiritter/util/logger.dart';
 import 'package:provider/provider.dart';
 
 final _log = logger("AppBarPopupMenuWidget");
+
+common_gui_ritter.AppLocalizationsGuiRitter get l10nGuiRitter =>
+    common_gui_ritter.l10nGuiRitter!;
 
 class AppBarPopupMenuWidget extends StatelessWidget {
   final List<PopupMenuItem<AppBarPopupMenuEnum>> Function({
@@ -119,10 +124,6 @@ class AppBarPopupMenuWidget extends StatelessWidget {
   }) {
     _log("onHomePopupMenuItemPressed").enum_("value", value).print();
 
-    final l10n = AppLocalizations.of(
-      context,
-    )!;
-
     switch (value) {
       case AppBarPopupMenuEnum.reload:
         final dataBloc = Provider.of<DataBloc>(
@@ -173,11 +174,11 @@ class AppBarPopupMenuWidget extends StatelessWidget {
             final optionList = [
               ThemeOptionWidget(
                 themeMode: ThemeEnum.dark,
-                title: l10n.darkTheme,
+                title: l10nGuiRitter.darkTheme,
               ),
               ThemeOptionWidget(
                 themeMode: ThemeEnum.light,
-                title: l10n.lightTheme,
+                title: l10nGuiRitter.lightTheme,
               ),
             ];
 
@@ -185,14 +186,14 @@ class AppBarPopupMenuWidget extends StatelessWidget {
               optionList.add(
                 ThemeOptionWidget(
                   themeMode: ThemeEnum.testDark,
-                  title: l10n.testDarkTheme,
+                  title: l10nGuiRitter.testDarkTheme,
                 ),
               );
 
               optionList.add(
                 ThemeOptionWidget(
                   themeMode: ThemeEnum.testLight,
-                  title: l10n.testLightTheme,
+                  title: l10nGuiRitter.testLightTheme,
                 ),
               );
             }
@@ -200,13 +201,13 @@ class AppBarPopupMenuWidget extends StatelessWidget {
             optionList.add(
               ThemeOptionWidget(
                 themeMode: ThemeEnum.system,
-                title: l10n.systemTheme,
+                title: l10nGuiRitter.systemTheme,
               ),
             );
 
             return AlertDialog(
               title: Text(
-                l10n.chooseTheme,
+                l10nGuiRitter.chooseTheme,
               ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -218,7 +219,7 @@ class AppBarPopupMenuWidget extends StatelessWidget {
                     context: context,
                   ),
                   child: Text(
-                    l10n.cancel,
+                    l10nGuiRitter.cancel,
                     textAlign: TextAlign.end,
                   ),
                 ),
@@ -235,8 +236,6 @@ class AppBarPopupMenuWidget extends StatelessWidget {
         userBloc.validateAndSetToken(
           newToken: null,
         );
-        break;
-      default:
         break;
     }
   }
@@ -289,7 +288,7 @@ class AppBarPopupMenuWidget extends StatelessWidget {
   }) =>
       _buildItem(
         enumValue: AppBarPopupMenuEnum.reload,
-        text: l10n.reload,
+        text: l10nGuiRitter.reload,
       );
 
   static PopupMenuItem<AppBarPopupMenuEnum> _buildItemSignOut({
@@ -297,7 +296,7 @@ class AppBarPopupMenuWidget extends StatelessWidget {
   }) =>
       _buildItem(
         enumValue: AppBarPopupMenuEnum.signOut,
-        text: l10n.signOut,
+        text: l10nGuiRitter.signOut,
       );
 
   static PopupMenuItem<AppBarPopupMenuEnum> _buildItemTheme({
@@ -305,6 +304,6 @@ class AppBarPopupMenuWidget extends StatelessWidget {
   }) =>
       _buildItem(
         enumValue: AppBarPopupMenuEnum.theme,
-        text: l10n.appTheme,
+        text: l10nGuiRitter.appTheme,
       );
 }
